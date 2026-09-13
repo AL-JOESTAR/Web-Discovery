@@ -1,0 +1,115 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-geist-sans);
+  --font-serif: var(--font-serif);
+}
+
+:root {
+  --background: #faf9f7;
+  --foreground: #1c1917;
+  --accent: #b8452c;
+}
+
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: #fff;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition-colors bg-accent text-white hover:opacity-90;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition-colors border border-stone-300 text-stone-800 hover:border-stone-900;
+  }
+
+  .input,
+  .textarea,
+  .select {
+    @apply w-full rounded-lg border border-stone-300 bg-white px-3.5 py-2.5 text-sm text-stone-900 outline-none transition-colors placeholder:text-stone-400 focus:border-accent focus:ring-2 focus:ring-accent/20;
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-stone-700;
+  }
+
+  .card {
+    @apply overflow-hidden rounded-2xl border border-stone-200 bg-white;
+  }
+}
+
+.tiptap-content h1 {
+  @apply mb-4 mt-8 text-3xl font-serif font-bold tracking-tight;
+}
+
+.tiptap-content h2 {
+  @apply mb-3 mt-8 text-2xl font-serif font-bold tracking-tight;
+}
+
+.tiptap-content h3 {
+  @apply mb-2 mt-6 text-xl font-serif font-semibold tracking-tight;
+}
+
+.tiptap-content p {
+  @apply mb-4 leading-relaxed text-stone-700;
+}
+
+.tiptap-content img {
+  @apply my-6 h-auto w-full rounded-xl;
+}
+
+.tiptap-content img.ProseMirror-selectednode {
+  @apply ring-2 ring-accent;
+}
+
+.tiptap-content a {
+  @apply font-medium text-accent underline underline-offset-2;
+}
+
+.tiptap-content blockquote {
+  @apply my-4 border-l-4 border-accent pl-4 italic text-stone-600;
+}
+
+.tiptap-content ul {
+  @apply my-4 list-disc space-y-1 pl-6 text-stone-700;
+}
+
+.tiptap-content ol {
+  @apply my-4 list-decimal space-y-1 pl-6 text-stone-700;
+}
+
+.tiptap-content pre {
+  @apply my-4 overflow-x-auto rounded-lg bg-stone-900 p-4 text-sm text-stone-100;
+}
+
+.tiptap-content :not(pre) > code {
+  @apply rounded bg-stone-200 px-1.5 py-0.5 text-[0.9em] text-stone-900;
+}
+
+.tiptap-content hr {
+  @apply my-8 border-t border-stone-300;
+}
+
+.tiptap-content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply float-left h-0 text-stone-400 pointer-events-none;
+}

@@ -1,0 +1,65 @@
+import type { LandingContent } from "@/lib/types";
+
+export const TAGS = {
+  articles: "articles",
+  categories: "categories",
+  pages: "pages",
+  settings: "site-settings",
+} as const;
+
+export const DEFAULT_LANDING: LandingContent = {
+  hero: {
+    title: "Temukan Gaya Fesyen Terbaikmu",
+    subtitle:
+      "Inspirasi, tips, dan panduan fashion terkini untuk gaya hidup harianmu.",
+    image: null,
+    cta_text: "Jelajahi Artikel",
+    cta_link: "/blog",
+  },
+  about: {
+    title: "Tentang Kami",
+    content:
+      "Kami menghadirkan konten seputar fashion, tren terkini, dan gaya hidup yang menginspirasi.",
+    image: null,
+  },
+  features: {
+    title: "Kenapa Memilih Kami",
+    subtitle: "Konten berkualitas yang menginspirasi gaya hidupmu",
+    items: [
+      {
+        title: "Tren Terbaru",
+        description: "Selalu update dengan tren fashion terbaru setiap musim.",
+      },
+      {
+        title: "Tips Terpercaya",
+        description: "Panduan memilih dan memadukan busana untuk berbagai acara.",
+      },
+      {
+        title: "Konten Berkualitas",
+        description: "Artikel yang ditulis dengan riset mendalam dan mudah dibaca.",
+      },
+    ],
+  },
+  newsletter: {
+    title: "Berlangganan Newsletter",
+    subtitle: "Dapatkan tips fashion terbaru langsung di email kamu.",
+  },
+};
+
+export const hasPublicEnv =
+  !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+export const hasAdminEnv =
+  !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+export function getSiteUrl(): string {
+  const fromEnv =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    process.env.NEXT_PUBLIC_VERCEL_URL ??
+    process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!fromEnv) return "http://localhost:3000";
+  if (fromEnv.startsWith("http")) return fromEnv;
+  return `https://${fromEnv}`;
+}
