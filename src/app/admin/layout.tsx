@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { LogoutButton } from "@/components/admin/logout-button";
 
 export const instant = false;
 
@@ -53,8 +54,9 @@ export default async function AdminLayout({
               </Link>
             ))}
           </nav>
-          <div className="border-t border-stone-200 p-4 text-xs text-stone-400">
-            {user.email}
+          <div className="space-y-2 border-t border-stone-200 p-3">
+            <p className="truncate px-3 text-xs text-stone-400">{user.email}</p>
+            <LogoutButton />
           </div>
         </div>
       </aside>

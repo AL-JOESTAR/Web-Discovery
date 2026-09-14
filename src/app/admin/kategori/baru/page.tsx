@@ -1,4 +1,6 @@
 import { CategoryForm } from "@/components/admin/category-form";
+import { GuideCard } from "@/components/admin/guide-card";
+import { GUIDE_KATEGORI } from "@/lib/guides";
 
 export default function AdminNewCategoryPage() {
   return (
@@ -10,6 +12,9 @@ export default function AdminNewCategoryPage() {
         Kategori untuk mengelompokkan artikel.
       </p>
       <div className="mt-6">
+        <GuideCard guide={GUIDE_KATEGORI} />
+      </div>
+      <div className="mt-4">
         <CategoryForm />
       </div>
     </div>

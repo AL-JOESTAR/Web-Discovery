@@ -1,22 +1,25 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import LinkExt from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
+import { KeywordHighlight, setKeyword } from "@/components/admin/keyword-highlight";
 
 type Props = {
   initialContent?: string;
   onChangeHtml: (html: string) => void;
   onChangeJson: (json: string) => void;
+  focusKeyword?: string;
 };
 
 export function RichTextEditor({
   initialContent,
   onChangeHtml,
   onChangeJson,
+  focusKeyword,
 }: Props) {
   const [mode, setMode] = useState<"visual" | "html">("visual");
   const [htmlSource, setHtmlSource] = useState(initialContent || "");
@@ -28,6 +31,7 @@ export function RichTextEditor({
       Image,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Underline,
+      KeywordHighlight.configure({ keyword: focusKeyword ?? "" }),
     ],
     content: initialContent || "",
     editorProps: {
@@ -42,6 +46,14 @@ export function RichTextEditor({
     },
     immediatelyRender: false,
   });
+
+  useEffect(() => {
+    if (editor && focusKeyword !== undefined) {
+      const tr = editor.view.state.tr;
+      setKeyword(tr, focusKeyword);
+      editor.view.dispatch(tr);
+    }
+  }, [editor, focusKeyword]);
 
   if (!editor) return null;
 

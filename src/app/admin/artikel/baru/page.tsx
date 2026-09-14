@@ -1,4 +1,4 @@
-import { getAllCategories } from "@/lib/admin-db";
+import { getAllCategories, getSiteSettingsAdmin } from "@/lib/admin-db";
 import { slugify } from "@/lib/utils";
 import { ArticleForm } from "@/components/admin/article-form";
 
@@ -7,13 +7,16 @@ export default async function AdminNewArticlePage({
 }: {
   searchParams: Promise<{ topik?: string; topikArtistik?: string }>;
 }) {
-  const [{ topik, topikArtistik }, categories] = await Promise.all([
+  const [{ topik, topikArtistik }, categories, settings] = await Promise.all([
     searchParams,
     getAllCategories(),
+    getSiteSettingsAdmin(),
   ]);
   const topic = (topik ?? topikArtistik ?? "").trim();
   const prefillTitle = topic;
   const prefillSlug = topic ? slugify(topic) : "";
+  const siteName = (settings?.name as string) ?? "";
+  const siteDomain = (settings?.domain as string) ?? "";
 
   return (
     <div>
@@ -28,6 +31,8 @@ export default async function AdminNewArticlePage({
           categories={categories}
           prefillTitle={prefillTitle}
           prefillSlug={prefillSlug}
+          siteName={siteName}
+          siteDomain={siteDomain}
         />
       </div>
     </div>

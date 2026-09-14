@@ -113,3 +113,25 @@
   content: attr(data-placeholder);
   @apply float-left h-0 text-stone-400 pointer-events-none;
 }
+
+mark.keyword-highlight {
+  @apply rounded-sm px-0.5;
+  background: #fef08a;
+  box-shadow: 0 0 0 1px #fde047;
+}
+
+.input-title-seo {
+  @apply w-full rounded-lg border-2 bg-white px-3.5 py-2.5 text-lg font-semibold text-stone-900 outline-none transition-all duration-300 placeholder:text-stone-400;
+}
+
+.input-title-seo.border-green-500 {
+  @apply border-green-500 focus:ring-2 focus:ring-green-200;
+}
+
+.input-title-seo.border-yellow-500 {
+  @apply border-yellow-500 focus:ring-2 focus:ring-yellow-200;
+}
+
+.input-title-seo.border-red-500 {
+  @apply border-red-500 focus:ring-2 focus:ring-red-200;
+}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getArticleById, getAllCategories } from "@/lib/admin-db";
+import { getArticleById, getAllCategories, getSiteSettingsAdmin } from "@/lib/admin-db";
 import { ArticleForm } from "@/components/admin/article-form";
 
 export default async function AdminEditArticlePage({
@@ -9,11 +9,15 @@ export default async function AdminEditArticlePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [article, categories] = await Promise.all([
+  const [article, categories, settings] = await Promise.all([
     getArticleById(id),
     getAllCategories(),
+    getSiteSettingsAdmin(),
   ]);
   if (!article) notFound();
+
+  const siteName = (settings?.name as string) ?? "";
+  const siteDomain = (settings?.domain as string) ?? "";
 
   return (
     <div>
@@ -29,7 +33,7 @@ export default async function AdminEditArticlePage({
         </Link>
       </div>
       <div className="mt-6">
-        <ArticleForm article={article} categories={categories} />
+        <ArticleForm article={article} categories={categories} siteName={siteName} siteDomain={siteDomain} />
       </div>
     </div>
   );

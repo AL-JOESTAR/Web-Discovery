@@ -24,13 +24,16 @@ export function PromptPanel({
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    try {
-      const t = localStorage.getItem(LS_TEMPLATE_KEY);
-      if (t) setTemplate(t);
-      const a = localStorage.getItem(LS_AFFILIATE_KEY);
-      if (a) setAffiliates(JSON.parse(a));
-    } catch {}
-    setHydrated(true);
+    const id = window.setTimeout(() => {
+      try {
+        const t = localStorage.getItem(LS_TEMPLATE_KEY);
+        if (t) setTemplate(t);
+        const a = localStorage.getItem(LS_AFFILIATE_KEY);
+        if (a) setAffiliates(JSON.parse(a));
+      } catch {}
+      setHydrated(true);
+    }, 0);
+    return () => window.clearTimeout(id);
   }, []);
 
   useEffect(() => {

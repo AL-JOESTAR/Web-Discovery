@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { getCategoryById } from "@/lib/admin-db";
 import { CategoryForm } from "@/components/admin/category-form";
+import { GuideCard } from "@/components/admin/guide-card";
+import { GUIDE_KATEGORI } from "@/lib/guides";
 
 export default async function AdminEditCategoryPage({
   params,
@@ -17,6 +19,9 @@ export default async function AdminEditCategoryPage({
         Edit Kategori
       </h1>
       <div className="mt-6">
+        <GuideCard guide={GUIDE_KATEGORI} />
+      </div>
+      <div className="mt-4">
         <CategoryForm category={category} />
       </div>
     </div>

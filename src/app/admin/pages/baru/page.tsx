@@ -1,4 +1,6 @@
 import { PageForm } from "@/components/admin/page-form";
+import { GuideCard } from "@/components/admin/guide-card";
+import { GUIDE_HALAMAN } from "@/lib/guides";
 
 export default function AdminNewPagePage() {
   return (
@@ -10,6 +12,9 @@ export default function AdminNewPagePage() {
         Halaman akan tersedia di /[slug].
       </p>
       <div className="mt-6">
+        <GuideCard guide={GUIDE_HALAMAN} />
+      </div>
+      <div className="mt-4">
         <PageForm />
       </div>
     </div>

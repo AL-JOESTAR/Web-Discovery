@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { getAllPages } from "@/lib/admin-db";
 import { DeleteButton } from "@/components/admin/delete-button";
+import { GuideCard } from "@/components/admin/guide-card";
+import { GUIDE_HALAMAN } from "@/lib/guides";
 
 export default async function AdminPagesPage() {
   const pages = await getAllPages();
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <GuideCard guide={GUIDE_HALAMAN} defaultOpen />
+
+      <div className="mt-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-serif font-bold text-stone-900">
             Halaman

@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { getAllCategories } from "@/lib/admin-db";
 import { DeleteButton } from "@/components/admin/delete-button";
+import { GuideCard } from "@/components/admin/guide-card";
+import { GUIDE_KATEGORI } from "@/lib/guides";
 
 export default async function AdminCategoriesPage() {
   const categories = await getAllCategories();
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <GuideCard guide={GUIDE_KATEGORI} defaultOpen />
+
+      <div className="mt-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-serif font-bold text-stone-900">
             Kategori
