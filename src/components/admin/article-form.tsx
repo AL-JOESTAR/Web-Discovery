@@ -12,14 +12,18 @@ const emptyState: ActionState = { ok: false };
 export function ArticleForm({
   article,
   categories,
+  prefillTitle,
+  prefillSlug,
 }: {
   article?: Article;
   categories: Category[];
+  prefillTitle?: string;
+  prefillSlug?: string;
 }) {
   const router = useRouter();
-  const [title, setTitle] = useState(article?.title ?? "");
-  const [slug, setSlug] = useState(article?.slug ?? "");
-  const [slugEdited, setSlugEdited] = useState(!!article);
+  const [title, setTitle] = useState(article?.title ?? prefillTitle ?? "");
+  const [slug, setSlug] = useState(article?.slug ?? prefillSlug ?? "");
+  const [slugEdited, setSlugEdited] = useState(!!article || !!prefillSlug);
   const [categoryId, setCategoryId] = useState(article?.category_id ?? "");
   const [excerpt, setExcerpt] = useState(article?.excerpt ?? "");
   const [coverImage, setCoverImage] = useState(article?.cover_image ?? "");

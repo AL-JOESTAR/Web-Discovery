@@ -97,11 +97,8 @@ export async function Footer() {
         </div>
       </div>
       <div className="border-t border-stone-200">
-        <div className="container-page flex items-center justify-between py-4 text-xs text-stone-400">
+        <div className="container-page flex justify-center py-4 text-xs text-stone-400">
           <p>© 2026 {name}. Semua hak dilindungi.</p>
-          <Link href="/admin/login" className="hover:text-stone-600">
-            Admin
-          </Link>
         </div>
       </div>
     </footer>

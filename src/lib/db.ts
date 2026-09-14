@@ -47,6 +47,46 @@ export async function getPublishedArticles(limit?: number): Promise<Article[]> {
   return (data as Article[] | null) ?? [];
 }
 
+export async function getPublishedArticlesPage({
+  page = 1,
+  pageSize = 9,
+  categorySlug,
+}: {
+  page?: number;
+  pageSize?: number;
+  categorySlug?: string | null;
+}): Promise<{ articles: Article[]; total: number; totalPages: number }> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(TAGS.articles);
+  if (categorySlug) cacheTag(TAGS.categories);
+  if (!hasPublicEnv) return { articles: [], total: 0, totalPages: 0 };
+
+  const safePage = Math.max(1, page);
+  const safeSize = Math.min(Math.max(1, pageSize), 24);
+  const from = (safePage - 1) * safeSize;
+  const to = from + safeSize - 1;
+
+  let query = publicClient()
+    .from("articles")
+    .select("*, category:categories(*)", { count: "exact" })
+    .eq("status", "published");
+  if (categorySlug) query = query.eq("category.slug", categorySlug);
+  query = query
+    .order("published_at", { ascending: false })
+    .range(from, to);
+
+  const { data, count } = await query;
+  const articles = (data as Article[] | null) ?? [];
+  const total = count ?? 0;
+
+  return {
+    articles,
+    total,
+    totalPages: Math.max(1, Math.ceil(total / safeSize)),
+  };
+}
+
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   "use cache";
   cacheLife("hours");
