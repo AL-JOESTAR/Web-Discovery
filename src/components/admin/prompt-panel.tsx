@@ -9,12 +9,13 @@ import {
 } from "@/lib/prompt-template";
 
 const LS_TEMPLATE_KEY = "fashion.prompt-template";
-const LS_AFFILIATE_KEY = "fashion.prompt-affiliates";
 
 export function PromptPanel({
   initialTopic = "",
+  savedAffiliates = [],
 }: {
   initialTopic?: string;
+  savedAffiliates?: Affiliate[];
 }) {
   const [topic, setTopic] = useState(initialTopic);
   const [affiliates, setAffiliates] = useState<Affiliate[]>([]);
@@ -28,8 +29,6 @@ export function PromptPanel({
       try {
         const t = localStorage.getItem(LS_TEMPLATE_KEY);
         if (t) setTemplate(t);
-        const a = localStorage.getItem(LS_AFFILIATE_KEY);
-        if (a) setAffiliates(JSON.parse(a));
       } catch {}
       setHydrated(true);
     }, 0);
@@ -43,34 +42,40 @@ export function PromptPanel({
     } catch {}
   }, [template, hydrated]);
 
-  useEffect(() => {
-    if (!hydrated) return;
-    try {
-      localStorage.setItem(LS_AFFILIATE_KEY, JSON.stringify(affiliates));
-    } catch {}
-  }, [affiliates, hydrated]);
-
   const finalPrompt = useMemo(
     () =>
       buildArticlePrompt({
         template,
         topik: topic,
-        affiliates: affiliates.filter((a) => a.nama.trim() && a.url.trim()),
+        affiliates,
       }),
     [template, topic, affiliates]
   );
 
-  function addAffiliate() {
-    setAffiliates((prev) => [...prev, { nama: "", url: "" }]);
-  }
+  const availableOptions = useMemo(
+    () =>
+      savedAffiliates.filter(
+        (a) =>
+          a.nama.trim() &&
+          a.url.trim() &&
+          !affiliates.some(
+            (s) => s.url === a.url || s.nama.toLowerCase() === a.nama.toLowerCase()
+          )
+      ),
+    [savedAffiliates, affiliates]
+  );
 
-  function updateAffiliate(
-    index: number,
-    field: keyof Affiliate,
-    value: string
-  ) {
+  function addSelected(url: string) {
+    const found = savedAffiliates.find((a) => a.url === url);
+    if (!found) return;
     setAffiliates((prev) =>
-      prev.map((a, i) => (i === index ? { ...a, [field]: value } : a))
+      prev.some(
+        (s) =>
+          s.url === found.url ||
+          s.nama.toLowerCase() === found.nama.toLowerCase()
+      )
+        ? prev
+        : [...prev, { nama: found.nama, url: found.url }]
     );
   }
 
@@ -92,9 +97,6 @@ export function PromptPanel({
   const topicQuery = topic.trim()
     ? `?topik=${encodeURIComponent(topic.trim())}`
     : "";
-  const filledCount = affiliates.filter(
-    (a) => a.nama.trim() && a.url.trim()
-  ).length;
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
@@ -115,51 +117,71 @@ export function PromptPanel({
             <h2 className="text-sm font-semibold text-stone-900">
               Link Afiliasi <span className="font-normal text-stone-400">(opsional)</span>
             </h2>
-            <button
-              type="button"
-              className="text-sm font-semibold text-stone-900 hover:underline"
-              onClick={addAffiliate}
+            <Link
+              href="/admin/affiliate"
+              className="text-xs text-stone-400 hover:text-accent"
             >
-              + Tambah
-            </button>
+              Kelola daftar →
+            </Link>
           </div>
           <p className="mt-1 text-xs text-stone-400">
-            Kosongkan jika belum ada. Nama &amp; URL yang terisi otomatis
-            dimasukkan ke prompt.
+            Pilih dari daftar tersimpan. Kosongkan jika belum ada.
           </p>
+
+          {availableOptions.length === 0 ? (
+            <p className="mt-3 rounded-lg bg-stone-50 p-3 text-sm text-stone-400">
+              {savedAffiliates.length === 0
+                ? "Belum ada link afiliasi tersimpan."
+                : "Semua link tersimpan sudah terpilih."}
+            </p>
+          ) : (
+            <div className="mt-3">
+              <select
+                name="affiliate-select"
+                className="select w-full"
+                value=""
+                onChange={(e) => {
+                  if (e.target.value) addSelected(e.target.value);
+                }}
+              >
+                <option value="">Pilih link afiliasi...</option>
+                {availableOptions.map((a) => (
+                  <option key={a.url} value={a.url}>
+                    {a.nama}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {affiliates.length === 0 ? (
             <p className="mt-3 rounded-lg bg-stone-50 p-3 text-sm text-stone-400">
-              Belum ada link afiliasi ({filledCount} terisi).
+              Belum ada link afiliasi terpilih.
             </p>
           ) : (
-            <div className="mt-3 space-y-2">
+            <ul className="mt-3 space-y-2">
               {affiliates.map((a, i) => (
-                <div key={i} className="flex items-start gap-2">
-                  <input
-                    className="input flex-1"
-                    value={a.nama}
-                    onChange={(e) => updateAffiliate(i, "nama", e.target.value)}
-                    placeholder="Nama produk"
-                  />
-                  <input
-                    className="input flex-1"
-                    type="url"
-                    value={a.url}
-                    onChange={(e) => updateAffiliate(i, "url", e.target.value)}
-                    placeholder="https://..."
-                  />
+                <li
+                  key={`${a.url}-${i}`}
+                  className="flex items-start justify-between gap-2 rounded-lg border border-stone-200 px-3 py-2"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-stone-800">
+                      {a.nama}
+                    </p>
+                    <p className="truncate text-xs text-stone-400">{a.url}</p>
+                  </div>
                   <button
                     type="button"
-                    className="mt-1 text-lg text-stone-400 hover:text-stone-700"
+                    className="mt-0.5 text-lg leading-none text-stone-400 hover:text-stone-700"
                     onClick={() => removeAffiliate(i)}
                     aria-label="Hapus"
                   >
                     &times;
                   </button>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
         </div>
 
@@ -228,8 +250,8 @@ export function PromptPanel({
           <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-stone-600">
             <li>Isi topik artikel.</li>
             <li>
-              Tambahkan link afiliasi (opsional) jika ada — otomatis masuk ke
-              prompt.
+              Pilih link afiliasi (opsional) dari daftar tersimpan — otomatis
+              masuk ke prompt.
             </li>
             <li>Klik <strong>Salin Prompt</strong> lalu tempel ke AI eksternal.</li>
             <li>

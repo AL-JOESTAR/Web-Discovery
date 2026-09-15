@@ -1,6 +1,6 @@
 import { adminClient } from "@/lib/supabase/admin";
 import { hasAdminEnv } from "@/lib/config";
-import type { Article, Category, Page } from "@/lib/types";
+import type { AffiliateLink, Article, Category, Page } from "@/lib/types";
 
 const db = () => adminClient();
 
@@ -79,4 +79,23 @@ export async function getSiteSettingsAdmin(): Promise<Record<string, unknown> | 
     .eq("key", "site")
     .single();
   return (data?.value as Record<string, unknown>) ?? null;
+}
+
+export async function getAllAffiliateLinks(): Promise<AffiliateLink[]> {
+  if (!hasAdminEnv) return [];
+  const { data } = await db()
+    .from("affiliate_links")
+    .select("*")
+    .order("nama", { ascending: true });
+  return (data as AffiliateLink[] | null) ?? [];
+}
+
+export async function getAffiliateLinkById(id: string): Promise<AffiliateLink | null> {
+  if (!hasAdminEnv) return null;
+  const { data } = await db()
+    .from("affiliate_links")
+    .select("*")
+    .eq("id", id)
+    .single();
+  return (data as AffiliateLink | null) ?? null;
 }

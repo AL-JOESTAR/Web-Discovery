@@ -8,6 +8,7 @@ const NAV = [
   { label: "Dashboard", href: "/admin/dashboard" },
   { label: "Artikel", href: "/admin/artikel" },
   { label: "Prompt", href: "/admin/prompt" },
+  { label: "Link Afiliasi", href: "/admin/affiliate" },
   { label: "Kategori", href: "/admin/kategori" },
   { label: "Halaman", href: "/admin/pages" },
   { label: "Pengaturan", href: "/admin/settings" },

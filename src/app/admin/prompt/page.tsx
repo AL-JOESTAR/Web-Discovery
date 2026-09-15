@@ -1,11 +1,15 @@
 import { PromptPanel } from "@/components/admin/prompt-panel";
+import { getAllAffiliateLinks } from "@/lib/admin-db";
 
 export default async function AdminPromptPage({
   searchParams,
 }: {
   searchParams: Promise<{ topik?: string }>;
 }) {
-  const { topik } = await searchParams;
+  const [{ topik }, savedAffiliates] = await Promise.all([
+    searchParams,
+    getAllAffiliateLinks(),
+  ]);
   return (
     <div>
       <h1 className="text-2xl font-serif font-bold text-stone-900">
@@ -16,7 +20,7 @@ export default async function AdminPromptPage({
         link afiliasi opsional.
       </p>
       <div className="mt-6">
-        <PromptPanel initialTopic={topik} />
+        <PromptPanel initialTopic={topik} savedAffiliates={savedAffiliates} />
       </div>
     </div>
   );

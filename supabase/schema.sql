@@ -29,10 +29,19 @@ create table if not exists public.articles (
   seo_title text,
   seo_description text,
   seo_keywords text,
+  template text not null default 'classic' check (template in ('classic','hero','magazine')),
+  gallery jsonb not null default '[]'::jsonb,
   published_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- Migrasi aman untuk DB yang sudah ada (idempotent)
+alter table public.articles
+  add column if not exists template text not null default 'classic'
+    check (template in ('classic','hero','magazine'));
+alter table public.articles
+  add column if not exists gallery jsonb not null default '[]'::jsonb;
 
 create index if not exists articles_slug_idx on public.articles(slug);
 create index if not exists articles_status_idx on public.articles(status);
@@ -65,6 +74,15 @@ create table if not exists public.admins (
   created_at timestamptz not null default now()
 );
 
+-- Affiliate links (dipakai untuk menyusun prompt artikel)
+create table if not exists public.affiliate_links (
+  id uuid primary key default gen_random_uuid(),
+  nama text not null,
+  url text not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 -- =============================================================
 -- RLS (Row Level Security)
 -- =============================================================
@@ -72,6 +90,9 @@ alter table public.articles enable row level security;
 alter table public.categories enable row level security;
 alter table public.pages enable row level security;
 alter table public.site_settings enable row level security;
+alter table public.affiliate_links enable row level security;
+
+-- affiliate_links tidak memiliki policy: hanya dapat diakses via service role (admin).
 
 -- Service role & anon bisa agnostik; policies berikut melindungi data privat
 create policy "public read published articles" on public.articles

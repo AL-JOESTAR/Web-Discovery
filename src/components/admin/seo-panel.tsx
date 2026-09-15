@@ -2,6 +2,32 @@
 
 import { useMemo, useState } from "react";
 import { ImageUpload } from "@/components/admin/image-upload";
+import { GalleryInput } from "@/components/admin/gallery-input";
+import type { ArticleTemplate, GalleryImage } from "@/lib/types";
+
+export const ARTICLE_TEMPLATES: {
+  value: ArticleTemplate;
+  label: string;
+  description: string;
+}[] = [
+  {
+    value: "classic",
+    label: "Klasik",
+    description: "Judul di atas, 1 gambar sampul penuh, lalu konten.",
+  },
+  {
+    value: "hero",
+    label: "Hero Samping",
+    description:
+      "Judul & meta di kiri, gambar sampul di kanan; galeri 2 gambar di bawah konten.",
+  },
+  {
+    value: "magazine",
+    label: "Majalah",
+    description:
+      "Hero besar dengan judul di atas gambar; galeri sebagai strip di bawah konten.",
+  },
+];
 
 export type SeoStatus = "pass" | "warn" | "fail";
 
@@ -252,11 +278,15 @@ export function SeoPanel({
   categoryId,
   coverImage,
   coverAlt,
+  template,
+  gallery,
   onSlugChange,
   onFocusKeywordChange,
   onCoverImageChange,
   onCoverAltChange,
   onCategoryChange,
+  onTemplateChange,
+  onGalleryChange,
 }: {
   title: string;
   metaDescription: string;
@@ -267,11 +297,15 @@ export function SeoPanel({
   categoryId: string;
   coverImage: string;
   coverAlt: string;
+  template: ArticleTemplate;
+  gallery: GalleryImage[];
   onSlugChange: (s: string) => void;
   onFocusKeywordChange: (k: string) => void;
   onCoverImageChange: (u: string) => void;
   onCoverAltChange: (a: string) => void;
   onCategoryChange: (c: string) => void;
+  onTemplateChange: (t: ArticleTemplate) => void;
+  onGalleryChange: (g: GalleryImage[]) => void;
 }) {
   const [openSections, setOpenSections] = useState({
     score: true,
@@ -481,6 +515,25 @@ export function SeoPanel({
       >
         <div className="space-y-4 p-5">
           <div>
+            <label className="label">Template Layout</label>
+            <select
+              className="select"
+              value={template}
+              onChange={(e) => onTemplateChange(e.target.value as ArticleTemplate)}
+            >
+              {ARTICLE_TEMPLATES.map((t) => (
+                <option key={t.value} value={t.value}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1.5 text-xs text-stone-500">
+              {
+                ARTICLE_TEMPLATES.find((t) => t.value === template)?.description
+              }
+            </p>
+          </div>
+          <div>
             <label className="label">Focus Keyphrase</label>
             <input
               className="input"
@@ -536,6 +589,10 @@ export function SeoPanel({
                 />
               </div>
             )}
+          </div>
+          <div>
+            <label className="label">Galeri Gambar (opsional)</label>
+            <GalleryInput value={gallery} onChange={onGalleryChange} />
           </div>
         </div>
       </CollapsibleSection>

@@ -7,6 +7,7 @@ const PROTECTED = [
   "/admin/kategori",
   "/admin/pages",
   "/admin/settings",
+  "/admin/affiliate",
 ];
 
 export function proxy(request: NextRequest) {
@@ -71,5 +72,6 @@ export const config = {
     "/admin/kategori/:path*",
     "/admin/pages/:path*",
     "/admin/settings/:path*",
+    "/admin/affiliate/:path*",
   ],
 };

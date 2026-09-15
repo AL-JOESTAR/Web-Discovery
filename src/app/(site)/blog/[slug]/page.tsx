@@ -6,8 +6,9 @@ import {
   getSiteSettings,
 } from "@/lib/db";
 import { getSiteUrl } from "@/lib/config";
-import { formatDate, readingTime } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { articleJsonLd, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
+import { ArticleLayout } from "@/components/site/article-layouts";
 
 export async function generateStaticParams() {
   const hasEnv =
@@ -90,43 +91,8 @@ export default async function ArticlePage({
         <span className="text-stone-600">{article.title}</span>
       </nav>
 
-      {/* Header */}
-      <header>
-        {article.category && (
-          <Link
-            href={`/kategori/${article.category.slug}`}
-            className="inline-block rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent hover:bg-accent/20"
-          >
-            {article.category.name}
-          </Link>
-        )}
-        <h1 className="mt-4 font-serif text-3xl font-bold leading-tight tracking-tight sm:text-5xl">
-          {article.title}
-        </h1>
-        <div className="mt-4 flex items-center gap-3 text-sm text-stone-400">
-          <span>{formatDate(article.published_at || article.created_at)}</span>
-          <span>•</span>
-          <span>{readingTime(article.content_html)} menit baca</span>
-        </div>
-      </header>
-
-      {/* Cover image */}
-      {article.cover_image && (
-        <div className="my-8 overflow-hidden rounded-2xl">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={article.cover_image}
-            alt={article.title}
-            className="h-auto w-full object-cover"
-          />
-        </div>
-      )}
-
-      {/* Content */}
-      <div
-        className="tiptap-content"
-        dangerouslySetInnerHTML={{ __html: article.content_html || "" }}
-      />
+      {/* Layout template (Klasik / Hero / Majalah) */}
+      <ArticleLayout article={article} />
 
       {/* Meta / Share */}
       <div className="mt-12 border-t border-stone-200 pt-6 text-sm text-stone-400">

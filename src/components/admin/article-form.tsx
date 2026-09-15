@@ -7,7 +7,7 @@ import { SeoPanel } from "@/components/admin/seo-panel";
 import { SerpPreview } from "@/components/admin/serp-preview";
 import { TagInput } from "@/components/admin/tag-input";
 import { slugify } from "@/lib/utils";
-import type { Article, Category } from "@/lib/types";
+import type { Article, ArticleTemplate, Category, GalleryImage } from "@/lib/types";
 
 const emptyState: ActionState = { ok: false };
 
@@ -53,6 +53,10 @@ export function ArticleForm({
   const [excerpt, setExcerpt] = useState(article?.excerpt ?? "");
   const [coverImage, setCoverImage] = useState(article?.cover_image ?? "");
   const [coverAlt, setCoverAlt] = useState("");
+  const [template, setTemplate] = useState<ArticleTemplate>(
+    article?.template ?? "classic"
+  );
+  const [gallery, setGallery] = useState<GalleryImage[]>(article?.gallery ?? []);
   const [status, setStatus] = useState<"draft" | "published">(
     article?.status ?? "draft"
   );
@@ -106,6 +110,8 @@ export function ArticleForm({
     fd.set("seo_keywords", seoKeywords);
     fd.set("content_html", contentHtml);
     fd.set("content_json", contentJson);
+    fd.set("template", template);
+    fd.set("gallery", JSON.stringify(gallery));
     if (article) fd.set("id", article.id);
 
     startTransition(async () => {
@@ -228,6 +234,10 @@ export function ArticleForm({
           onCoverImageChange={setCoverImage}
           onCoverAltChange={setCoverAlt}
           onCategoryChange={setCategoryId}
+          template={template}
+          onTemplateChange={setTemplate}
+          gallery={gallery}
+          onGalleryChange={setGallery}
         />
       </div>
 

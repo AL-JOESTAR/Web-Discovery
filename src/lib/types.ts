@@ -9,6 +9,13 @@ export type Category = {
   updated_at: string;
 };
 
+export type ArticleTemplate = "classic" | "hero" | "magazine";
+
+export type GalleryImage = {
+  url: string;
+  alt?: string;
+};
+
 export type Article = {
   id: string;
   category_id: string | null;
@@ -23,6 +30,8 @@ export type Article = {
   seo_title: string | null;
   seo_description: string | null;
   seo_keywords: string | null;
+  template: ArticleTemplate;
+  gallery: GalleryImage[];
   published_at: string | null;
   created_at: string;
   updated_at: string;
@@ -37,6 +46,14 @@ export type Page = {
   published: boolean;
   seo_title: string | null;
   seo_description: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AffiliateLink = {
+  id: string;
+  nama: string;
+  url: string;
   created_at: string;
   updated_at: string;
 };

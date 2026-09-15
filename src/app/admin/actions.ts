@@ -55,6 +55,10 @@ export async function createArticle(
     String(formData.get("seo_description") || "").trim() || null;
   const seo_keywords =
     String(formData.get("seo_keywords") || "").trim() || null;
+  const template = parseArticleTemplate(
+    String(formData.get("template") || "classic")
+  );
+  const gallery = parseGallery(String(formData.get("gallery") || ""));
 
   if (!title) return { ok: false, error: "Judul harus diisi." };
 
@@ -78,6 +82,8 @@ export async function createArticle(
       seo_title,
       seo_description,
       seo_keywords,
+      template,
+      gallery,
       published_at,
     })
     .select("id, slug")
@@ -118,6 +124,10 @@ export async function updateArticle(
     String(formData.get("seo_description") || "").trim() || null;
   const seo_keywords =
     String(formData.get("seo_keywords") || "").trim() || null;
+  const template = parseArticleTemplate(
+    String(formData.get("template") || "classic")
+  );
+  const gallery = parseGallery(String(formData.get("gallery") || ""));
 
   if (!id || !title) return { ok: false, error: "Data tidak lengkap." };
 
@@ -148,6 +158,8 @@ export async function updateArticle(
     seo_title,
     seo_description,
     seo_keywords,
+    template,
+    gallery,
     updated_at: new Date().toISOString(),
   };
   if (published_at) updateData.published_at = published_at;
@@ -440,6 +452,99 @@ export async function updateSiteSettings(
   revalidatePath("/");
   revalidatePath("/blog");
   revalidatePath("/sitemap.xml");
+  return { ok: true };
+}
+
+// ─── Affiliate Links ────────────────────────────────────────────────────────
+
+const URL_RE = /^https?:\/\/.+/i;
+const ARTICLE_TEMPLATES = ["classic", "hero", "magazine"] as const;
+type ArticleTemplate = (typeof ARTICLE_TEMPLATES)[number];
+
+function parseArticleTemplate(raw: string): ArticleTemplate {
+  return ARTICLE_TEMPLATES.includes(raw as ArticleTemplate)
+    ? (raw as ArticleTemplate)
+    : "classic";
+}
+
+function parseGallery(raw: string): { url: string; alt?: string }[] {
+  if (!raw.trim()) return [];
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return [];
+  }
+  if (!Array.isArray(parsed)) return [];
+  return parsed.filter(
+    (item): item is { url: string; alt?: string } =>
+      !!item &&
+      typeof item === "object" &&
+      typeof (item as { url?: unknown }).url === "string" &&
+      URL_RE.test((item as { url: string }).url)
+  );
+}
+
+export async function createAffiliateLink(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  await requireAdmin();
+  const nama = String(formData.get("nama") || "").trim();
+  const url = String(formData.get("url") || "").trim();
+
+  if (!nama) return { ok: false, error: "Nama harus diisi." };
+  if (!URL_RE.test(url)) {
+    return { ok: false, error: "URL tidak valid. Gunakan http:// atau https://." };
+  }
+
+  const { data, error } = await adminClient()
+    .from("affiliate_links")
+    .insert({ nama, url })
+    .select("id, nama")
+    .single();
+  if (error) return { ok: false, error: "Gagal menyimpan link afiliasi." };
+
+  revalidatePath("/admin/affiliate");
+  revalidatePath("/admin/prompt");
+  return { ok: true, id: data.id };
+}
+
+export async function updateAffiliateLink(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  await requireAdmin();
+  const id = String(formData.get("id") || "").trim();
+  const nama = String(formData.get("nama") || "").trim();
+  const url = String(formData.get("url") || "").trim();
+
+  if (!id || !nama) return { ok: false, error: "Data tidak lengkap." };
+  if (!URL_RE.test(url)) {
+    return { ok: false, error: "URL tidak valid. Gunakan http:// atau https://." };
+  }
+
+  const { error } = await adminClient()
+    .from("affiliate_links")
+    .update({ nama, url, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) return { ok: false, error: "Gagal mengupdate link afiliasi." };
+
+  revalidatePath("/admin/affiliate");
+  revalidatePath("/admin/prompt");
+  return { ok: true, id };
+}
+
+export async function deleteAffiliateLink(id: string): Promise<ActionState> {
+  await requireAdmin();
+  const { error } = await adminClient()
+    .from("affiliate_links")
+    .delete()
+    .eq("id", id);
+  if (error) return { ok: false, error: "Gagal menghapus." };
+
+  revalidatePath("/admin/affiliate");
+  revalidatePath("/admin/prompt");
   return { ok: true };
 }
 
