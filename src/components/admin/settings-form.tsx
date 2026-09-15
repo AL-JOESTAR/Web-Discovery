@@ -46,6 +46,10 @@ export function SettingsForm({ initial }: { initial: SiteSettings | null }) {
     setLanding((prev) => ({ ...prev, hero: { ...prev.hero, ...patch } }));
   }
 
+  function setAbout(patch: Partial<LandingContent["about"]>) {
+    setLanding((prev) => ({ ...prev, about: { ...prev.about, ...patch } }));
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const fd = new FormData();
@@ -184,6 +188,36 @@ export function SettingsForm({ initial }: { initial: SiteSettings | null }) {
               value={landing.hero.image ?? ""}
               onChange={(url) => setHero({ image: url })}
             />
+          </Field>
+        </div>
+      </Fieldset>
+
+      <Fieldset title="Landing Page — Tentang">
+        <div className="grid gap-4">
+          <Field label="Judul (mis. Tentang Kami)">
+            <input
+              className="input"
+              value={landing.about.title}
+              onChange={(e) => setAbout({ title: e.target.value })}
+            />
+          </Field>
+          <Field label="Konten">
+            <textarea
+              className="textarea"
+              rows={4}
+              value={landing.about.content}
+              onChange={(e) => setAbout({ content: e.target.value })}
+            />
+          </Field>
+          <Field label="Gambar">
+            <ImageUpload
+              value={landing.about.image ?? ""}
+              onChange={(url) => setAbout({ image: url })}
+              label="Upload Gambar Tentang"
+            />
+            <p className="mt-1.5 text-xs text-stone-500">
+              Jika kosong, tampil kotak placeholder berisi nama situs.
+            </p>
           </Field>
         </div>
       </Fieldset>
