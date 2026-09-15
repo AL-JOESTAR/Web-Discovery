@@ -12,7 +12,7 @@ import { Hero } from "@/components/site/hero";
 export default async function HomePage() {
   const [landing, articles, categories, settings] = await Promise.all([
     getLandingContent(),
-    getPublishedArticles(6),
+    getPublishedArticles(5),
     getCategories(),
     getSiteSettings(),
   ]);
