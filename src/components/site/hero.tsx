@@ -33,7 +33,7 @@ export function Hero({
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(184,69,44,0.28),_transparent_55%),linear-gradient(160deg,#1c1917_0%,#292524_45%,#1c1917_100%)]" />
       )}
 
-      <div className="container-wide relative flex min-h-[calc(100svh-4.5rem)] flex-col justify-end py-16 sm:justify-center sm:py-20 lg:py-24">
+      <div className="relative flex min-h-[calc(100svh-4.5rem)] flex-col justify-end px-4 py-16 sm:justify-center sm:px-6 sm:pt-20 sm:pb-32 lg:px-12 lg:pt-24 lg:pb-40">
         <div className="max-w-xl lg:max-w-2xl">
           <p className="font-serif text-sm uppercase tracking-[0.35em] text-accent">
             {name}
