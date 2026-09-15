@@ -41,7 +41,7 @@ export function Hero({
           <h1 className="hero-title mt-4 text-balance text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)]">
             {title}
           </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-stone-200 sm:text-xl">
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-stone-200 sm:text-xl lg:mt-8 lg:max-w-2xl lg:text-2xl">
             {subtitle}
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
