@@ -97,7 +97,7 @@ export default async function HomePage() {
                 <img
                   src={landing.about.image}
                   alt={landing.about.title}
-                  className="aspect-[4/3] w-full rounded-3xl object-cover shadow-lg shadow-stone-900/10"
+                  className="h-auto w-full rounded-3xl shadow-lg shadow-stone-900/10"
                 />
               ) : (
                 <div className="flex aspect-[4/3] w-full items-center justify-center rounded-3xl bg-stone-100 font-serif text-4xl text-stone-400">
