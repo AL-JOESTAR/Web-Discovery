@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getCategories } from "@/lib/db";
 import { getSiteUrl } from "@/lib/config";
+import { PageHero } from "@/components/site/page-hero";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -17,20 +18,14 @@ export default async function KategoriPage() {
   const categories = await getCategories();
 
   return (
-    <div className="container-page py-14 sm:py-20">
-      <header className="mx-auto max-w-2xl text-center">
-        <p className="font-serif text-sm uppercase tracking-[0.3em] text-accent">
-          Kategori
-        </p>
-        <h1 className="mt-3 font-serif text-4xl font-bold tracking-tight sm:text-5xl">
-          Jelajahi Berdasarkan Topik
-        </h1>
-        <p className="mt-4 text-stone-500">
-          Pilih kategori yang ingin kamu baca.
-        </p>
-      </header>
+    <div className="container-wide py-14 sm:py-20">
+      <PageHero
+        eyebrow="Kategori"
+        title="Jelajahi Berdasarkan Topik"
+        description="Pilih kategori yang ingin kamu baca."
+      />
 
-      <div className="mx-auto mt-12 grid max-w-3xl gap-4 sm:grid-cols-2">
+      <div className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-2">
         {categories.map((category) => (
           <Link
             key={category.id}

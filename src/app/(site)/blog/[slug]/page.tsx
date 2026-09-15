@@ -76,10 +76,17 @@ export default async function ArticlePage({
   const settings = await getSiteSettings();
   const siteName = settings?.site?.name ?? "Fashion";
 
+  const template = article.template || "classic";
+  const wide = template === "hero" || template === "magazine";
+
   return (
-    <article className="container-page max-w-3xl py-14 sm:py-20">
+    <article className={wide ? "pb-16 sm:pb-24" : "container-page max-w-3xl py-14 sm:py-20"}>
       {/* Breadcrumb */}
-      <nav className="mb-8 text-sm text-stone-400">
+      <nav
+        className={`text-sm text-stone-400 ${
+          wide ? "container-wide mb-6 pt-8 sm:mb-8 sm:pt-10" : "mb-8"
+        }`}
+      >
         <Link href="/" className="hover:text-accent">
           Beranda
         </Link>
@@ -91,11 +98,15 @@ export default async function ArticlePage({
         <span className="text-stone-600">{article.title}</span>
       </nav>
 
-      {/* Layout template (Klasik / Hero / Majalah) */}
-      <ArticleLayout article={article} />
+      <div className={template === "hero" ? "container-wide" : undefined}>
+        <ArticleLayout article={article} />
+      </div>
 
-      {/* Meta / Share */}
-      <div className="mt-12 border-t border-stone-200 pt-6 text-sm text-stone-400">
+      <div
+        className={`mt-12 border-t border-stone-200 pt-6 text-sm text-stone-400 ${
+          wide ? "container-wide" : ""
+        }`}
+      >
         <p>
           Terbit: {formatDate(article.published_at || article.created_at)}
           {article.updated_at &&

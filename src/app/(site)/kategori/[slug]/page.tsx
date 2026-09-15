@@ -8,6 +8,7 @@ import {
 } from "@/lib/db";
 import { getSiteUrl } from "@/lib/config";
 import { ArticleCard } from "@/components/site/article-card";
+import { PageHero } from "@/components/site/page-hero";
 import { categoryJsonLd, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
 
 export async function generateStaticParams() {
@@ -60,7 +61,7 @@ export default async function KategoriDetailPage({
   const siteName = settings?.site?.name ?? "Fashion";
 
   return (
-    <div className="container-page py-14 sm:py-20">
+    <div className="container-wide py-14 sm:py-20">
       <nav className="mb-8 text-sm text-stone-400">
         <Link href="/" className="hover:text-accent">
           Beranda
@@ -73,14 +74,11 @@ export default async function KategoriDetailPage({
         <span className="text-stone-600">{category.name}</span>
       </nav>
 
-      <header className="max-w-2xl">
-        <h1 className="font-serif text-4xl font-bold tracking-tight sm:text-5xl">
-          {category.name}
-        </h1>
-        {category.description && (
-          <p className="mt-4 text-stone-500">{category.description}</p>
-        )}
-      </header>
+      <PageHero
+        align="left"
+        title={category.name}
+        description={category.description || undefined}
+      />
 
       {articles.length === 0 ? (
         <div className="mt-12 rounded-2xl border border-dashed border-stone-300 bg-white p-12 text-center">

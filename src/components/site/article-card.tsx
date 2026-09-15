@@ -1,16 +1,35 @@
 import Link from "next/link";
 import type { Article } from "@/lib/types";
-import { formatDate, readingTime } from "@/lib/utils";
+import { formatDate, readingTime, cn } from "@/lib/utils";
 
-export function ArticleCard({ article, featured = false }: { article: Article; featured?: boolean }) {
+export function ArticleCard({
+  article,
+  featured = false,
+  className,
+}: {
+  article: Article;
+  featured?: boolean;
+  className?: string;
+}) {
   const href = `/blog/${article.slug}`;
   return (
     <Link
       href={href}
-      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white transition-shadow hover:shadow-lg"
+      className={cn(
+        "group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-sm shadow-stone-900/5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-stone-900/10",
+        featured && "lg:flex-row",
+        className
+      )}
     >
       {article.cover_image ? (
-        <div className={`w-full overflow-hidden ${featured ? "aspect-[16/9]" : "aspect-[3/2]"}`}>
+        <div
+          className={cn(
+            "w-full overflow-hidden",
+            featured
+              ? "aspect-[16/9] lg:aspect-auto lg:h-auto lg:w-[48%] lg:min-h-[280px]"
+              : "aspect-[3/2]"
+          )}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={article.cover_image}
@@ -19,14 +38,21 @@ export function ArticleCard({ article, featured = false }: { article: Article; f
           />
         </div>
       ) : (
-        <div className={`flex w-full items-center justify-center ${featured ? "aspect-[16/9]" : "aspect-[3/2]"} bg-gradient-to-br from-stone-100 to-stone-200`}>
+        <div
+          className={cn(
+            "flex w-full items-center justify-center bg-gradient-to-br from-stone-100 to-stone-200",
+            featured
+              ? "aspect-[16/9] lg:aspect-auto lg:w-[48%] lg:min-h-[280px]"
+              : "aspect-[3/2]"
+          )}
+        >
           <span className="font-serif text-2xl font-semibold text-stone-400">
             {article.title.charAt(0).toUpperCase()}
           </span>
         </div>
       )}
-      <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-center gap-2 text-xs text-stone-400">
+      <div className={cn("flex flex-1 flex-col p-5", featured && "lg:justify-center lg:p-8")}>
+        <div className="flex flex-wrap items-center gap-2 text-xs text-stone-400">
           {article.category && (
             <span className="font-medium uppercase tracking-wide text-accent">
               {article.category.name}
@@ -38,14 +64,20 @@ export function ArticleCard({ article, featured = false }: { article: Article; f
           <span>{readingTime(article.content_html)} mnt</span>
         </div>
         <h3
-          className={`mt-2 font-serif font-bold tracking-tight text-stone-900 group-hover:text-accent ${
-            featured ? "text-2xl" : "text-lg"
-          }`}
+          className={cn(
+            "mt-2 font-serif font-bold tracking-tight text-stone-900 transition-colors group-hover:text-accent",
+            featured ? "text-2xl sm:text-3xl" : "text-lg"
+          )}
         >
           {article.title}
         </h3>
         {article.excerpt && (
-          <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-stone-500">
+          <p
+            className={cn(
+              "mt-2 leading-relaxed text-stone-500",
+              featured ? "line-clamp-3 text-base" : "line-clamp-2 flex-1 text-sm"
+            )}
+          >
             {article.excerpt}
           </p>
         )}

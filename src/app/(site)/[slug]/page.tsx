@@ -56,7 +56,7 @@ export default async function CustomPage({
         <span className="text-stone-600">{page.title}</span>
       </nav>
 
-      <h1 className="font-serif text-4xl font-bold tracking-tight sm:text-5xl">
+      <h1 className="font-serif text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
         {page.title}
       </h1>
 

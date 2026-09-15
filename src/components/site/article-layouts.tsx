@@ -2,12 +2,22 @@ import Link from "next/link";
 import type { Article, GalleryImage } from "@/lib/types";
 import { formatDate, readingTime } from "@/lib/utils";
 
-function CategoryBadge({ article }: { article: Article }) {
+function CategoryBadge({
+  article,
+  onDark = false,
+}: {
+  article: Article;
+  onDark?: boolean;
+}) {
   if (!article.category) return null;
   return (
     <Link
       href={`/kategori/${article.category.slug}`}
-      className="inline-block rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent hover:bg-accent/20"
+      className={
+        onDark
+          ? "inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm hover:bg-white/25"
+          : "inline-block rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent hover:bg-accent/20"
+      }
     >
       {article.category.name}
     </Link>
@@ -16,7 +26,7 @@ function CategoryBadge({ article }: { article: Article }) {
 
 function ArticleMeta({ article }: { article: Article }) {
   return (
-    <div className="flex items-center gap-3 text-sm">
+    <div className="flex flex-wrap items-center gap-3 text-sm">
       <span>{formatDate(article.published_at || article.created_at)}</span>
       <span>•</span>
       <span>{readingTime(article.content_html)} menit baca</span>
@@ -92,7 +102,7 @@ function ClassicLayout({ article }: { article: Article }) {
       </header>
 
       {article.cover_image && (
-        <div className="my-8 overflow-hidden rounded-2xl">
+        <div className="my-8 overflow-hidden rounded-3xl shadow-lg shadow-stone-900/10">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={article.cover_image}
@@ -112,14 +122,14 @@ function ClassicLayout({ article }: { article: Article }) {
 function HeroLayout({ article }: { article: Article }) {
   return (
     <>
-      <header className="grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
+      <header className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
         <div>
           <CategoryBadge article={article} />
-          <h1 className="mt-4 font-serif text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
+          <h1 className="mt-4 font-serif text-3xl font-bold leading-tight tracking-tight sm:text-5xl">
             {article.title}
           </h1>
           {article.excerpt && (
-            <p className="mt-4 leading-relaxed text-stone-500">
+            <p className="mt-4 text-lg leading-relaxed text-stone-500">
               {article.excerpt}
             </p>
           )}
@@ -133,57 +143,67 @@ function HeroLayout({ article }: { article: Article }) {
             <img
               src={article.cover_image}
               alt={article.title}
-              className="aspect-[4/3] w-full rounded-2xl object-cover"
+              className="aspect-[4/5] w-full rounded-3xl object-cover shadow-lg shadow-stone-900/10 sm:aspect-[4/3]"
             />
           )}
         </div>
       </header>
 
-      <ArticleContent article={article} />
-
-      <GalleryGrid items={article.gallery} />
+      <div className="mx-auto mt-12 max-w-3xl">
+        <ArticleContent article={article} />
+        <GalleryGrid items={article.gallery} />
+      </div>
     </>
   );
 }
 
 function MagazineLayout({ article }: { article: Article }) {
-  const heroText = article.cover_image
-    ? "absolute inset-x-0 bottom-0 p-6 text-white sm:p-10"
-    : "p-6 sm:p-10";
+  const onDark = Boolean(article.cover_image);
 
   return (
     <>
-      <header className="relative overflow-hidden rounded-3xl">
+      <header className="relative min-h-[min(70svh,40rem)] overflow-hidden rounded-none sm:rounded-3xl">
         {article.cover_image ? (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={article.cover_image}
               alt={article.title}
-              className="aspect-[16/10] w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/50 to-stone-950/10" />
           </>
-        ) : null}
-        <div className={`relative ${heroText}`}>
-          <CategoryBadge article={article} />
-          <h1 className="mt-3 max-w-2xl font-serif text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
+        ) : (
+          <div className="absolute inset-0 bg-stone-100" />
+        )}
+        <div
+          className={`relative flex min-h-[min(70svh,40rem)] flex-col justify-end p-6 sm:p-10 lg:p-14 ${
+            onDark ? "text-white" : "text-stone-900"
+          }`}
+        >
+          <CategoryBadge article={article} onDark={onDark} />
+          <h1 className="hero-title mt-4 max-w-3xl text-balance">
             {article.title}
           </h1>
           {article.excerpt && (
-            <p className="mt-3 max-w-xl text-sm leading-relaxed text-stone-300/90 sm:text-base">
+            <p
+              className={`mt-4 max-w-xl text-base leading-relaxed sm:text-lg ${
+                onDark ? "text-stone-200" : "text-stone-500"
+              }`}
+            >
               {article.excerpt}
             </p>
           )}
-          <div className="mt-4 text-stone-400">
+          <div className={`mt-4 ${onDark ? "text-stone-300" : "text-stone-400"}`}>
             <ArticleMeta article={article} />
           </div>
         </div>
       </header>
 
-      <ArticleContent article={article} />
-
-      <GalleryStrip items={article.gallery} />
+      <div className="container-page mx-auto max-w-3xl">
+        <ArticleContent article={article} />
+        <GalleryStrip items={article.gallery} />
+      </div>
     </>
   );
 }

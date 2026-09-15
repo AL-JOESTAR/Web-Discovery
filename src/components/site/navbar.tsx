@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getCategories, getSiteSettings } from "@/lib/db";
+import { MobileNav } from "@/components/site/mobile-nav";
 
 export async function Navbar() {
   const [settings, categories] = await Promise.all([
@@ -8,10 +9,17 @@ export async function Navbar() {
   ]);
   const site = settings?.site;
   const name = site?.name ?? "Fashion";
+  const links = [
+    { href: "/blog", label: "Blog" },
+    ...categories.slice(0, 5).map((category) => ({
+      href: `/kategori/${category.slug}`,
+      label: category.name,
+    })),
+  ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-stone-200/70 bg-background/90 backdrop-blur">
-      <div className="container-page flex h-16 items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 border-b border-stone-200/60 bg-background/80 backdrop-blur-md">
+      <div className="container-wide flex h-[4.5rem] items-center justify-between gap-4">
         <Link href="/" className="group flex items-center gap-2">
           {site?.logo_url ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -21,30 +29,25 @@ export async function Navbar() {
               className="h-8 w-auto object-contain"
             />
           ) : (
-            <span className="font-serif text-xl font-bold tracking-tight text-stone-900 group-hover:text-accent">
+            <span className="font-serif text-xl font-bold tracking-tight text-stone-900 transition-colors group-hover:text-accent">
               {name}
             </span>
           )}
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
-          <Link
-            href="/blog"
-            className="text-sm font-medium text-stone-600 transition-colors hover:text-accent"
-          >
-            Blog
-          </Link>
-          {categories.slice(0, 5).map((category) => (
+        <nav className="hidden items-center gap-7 md:flex">
+          {links.map((link) => (
             <Link
-              key={category.id}
-              href={`/kategori/${category.slug}`}
+              key={link.href}
+              href={link.href}
               className="text-sm font-medium text-stone-600 transition-colors hover:text-accent"
             >
-              {category.name}
+              {link.label}
             </Link>
           ))}
         </nav>
 
+        <MobileNav name={name} logoUrl={site?.logo_url} links={links} />
       </div>
     </header>
   );

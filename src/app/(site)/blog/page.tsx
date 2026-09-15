@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getPublishedArticlesPage, getCategories, getSiteSettings } from "@/lib/db";
 import { getSiteUrl } from "@/lib/config";
 import { ArticleCard } from "@/components/site/article-card";
+import { PageHero } from "@/components/site/page-hero";
 
 export const PAGE_SIZE = 9;
 
@@ -57,24 +58,21 @@ export default async function BlogPage({
   const active = categories.find((c) => c.slug === kategoriSlug);
 
   return (
-    <div className="container-page py-14 sm:py-20">
-      <header className="mx-auto max-w-2xl text-center">
-        <p className="font-serif text-sm uppercase tracking-[0.3em] text-accent">Blog</p>
-        <h1 className="mt-3 font-serif text-4xl font-bold tracking-tight sm:text-5xl">
-          Semua Artikel
-        </h1>
-        <p className="mt-4 text-stone-500">
-          {active
+    <div className="container-wide py-14 sm:py-20">
+      <PageHero
+        eyebrow="Blog"
+        title="Semua Artikel"
+        description={
+          active
             ? `Artikel di kategori "${active.name}".`
-            : "Inspirasi dan panduan fashion terbaru untuk gayamu."}
-        </p>
-      </header>
+            : "Inspirasi dan panduan fashion terbaru untuk gayamu."
+        }
+      />
 
-      {/* Filter kategori */}
-      <div className="mt-8 flex flex-wrap justify-center gap-2">
+      <div className="mt-10 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:flex-wrap sm:justify-center sm:overflow-visible [&::-webkit-scrollbar]:hidden">
         <Link
           href="/blog"
-          className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+          className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
             !kategoriSlug
               ? "border-accent bg-accent text-white"
               : "border-stone-300 text-stone-600 hover:border-stone-400"
@@ -86,7 +84,7 @@ export default async function BlogPage({
           <Link
             key={category.id}
             href={buildHref({ page: 1, kategori: category.slug })}
-            className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+            className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
               category.slug === kategoriSlug
                 ? "border-accent bg-accent text-white"
                 : "border-stone-300 text-stone-600 hover:border-stone-400"
@@ -104,7 +102,7 @@ export default async function BlogPage({
           </p>
         </div>
       ) : (
-        <div className="mx-auto mt-12 grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {articles.map((article) => (
             <ArticleCard key={article.id} article={article} />
           ))}
