@@ -62,7 +62,7 @@ export default async function AdminDashboardPage() {
             Belum ada artikel.
           </div>
         ) : (
-          <div className="mt-4 overflow-hidden rounded-xl border border-stone-200 bg-white">
+          <div className="mt-4 overflow-x-auto rounded-xl border border-stone-200 bg-white">
             <table className="w-full text-left text-sm">
               <thead className="border-b border-stone-200 bg-stone-50">
                 <tr>

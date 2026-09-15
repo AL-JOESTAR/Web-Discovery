@@ -32,7 +32,7 @@ export default async function AdminAffiliatePage() {
           </Link>
         </div>
       ) : (
-        <div className="mt-6 overflow-hidden rounded-xl border border-stone-200 bg-white">
+        <div className="mt-6 overflow-x-auto rounded-xl border border-stone-200 bg-white">
           <table className="w-full text-left text-sm">
             <thead className="border-b border-stone-200 bg-stone-50">
               <tr>

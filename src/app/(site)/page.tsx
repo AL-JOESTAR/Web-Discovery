@@ -50,12 +50,6 @@ export default async function HomePage() {
             >
               {landing.hero.cta_text || "Jelajahi Artikel"}
             </Link>
-            <Link
-              href="/blog"
-              className="btn border border-white/30 text-white hover:bg-white/10"
-            >
-              Lihat Semua
-            </Link>
           </div>
         </div>
       </section>

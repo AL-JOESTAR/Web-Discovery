@@ -1,18 +1,7 @@
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { LogoutButton } from "@/components/admin/logout-button";
+import { AdminNav } from "@/components/admin/admin-nav";
 
 export const instant = false;
-
-const NAV = [
-  { label: "Dashboard", href: "/admin/dashboard" },
-  { label: "Artikel", href: "/admin/artikel" },
-  { label: "Prompt", href: "/admin/prompt" },
-  { label: "Link Afiliasi", href: "/admin/affiliate" },
-  { label: "Kategori", href: "/admin/kategori" },
-  { label: "Halaman", href: "/admin/pages" },
-  { label: "Pengaturan", href: "/admin/settings" },
-];
 
 export default async function AdminLayout({
   children,
@@ -31,49 +20,5 @@ export default async function AdminLayout({
     );
   }
 
-  return (
-    <div className="flex min-h-screen bg-stone-100">
-      {/* Sidebar */}
-      <aside className="hidden w-64 shrink-0 border-r border-stone-200 bg-white md:block">
-        <div className="flex h-full flex-col">
-          <div className="flex h-14 items-center border-b border-stone-200 px-4">
-            <Link
-              href="/admin/dashboard"
-              className="font-serif text-lg font-bold text-stone-900 hover:text-accent"
-            >
-              Fashion Admin
-            </Link>
-          </div>
-          <nav className="flex-1 space-y-1 p-3">
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="block rounded-lg px-3 py-2 text-sm font-medium text-stone-600 hover:bg-stone-100 hover:text-stone-900"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="space-y-2 border-t border-stone-200 p-3">
-            <p className="truncate px-3 text-xs text-stone-400">{user.email}</p>
-            <LogoutButton />
-          </div>
-        </div>
-      </aside>
-
-      {/* Main */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="flex h-14 items-center border-b border-stone-200 bg-white px-4 md:hidden">
-          <Link
-            href="/admin/dashboard"
-            className="font-serif text-lg font-bold text-stone-900"
-          >
-            Fashion Admin
-          </Link>
-        </header>
-        <main className="flex-1 overflow-auto p-6">{children}</main>
-      </div>
-    </div>
-  );
+  return <AdminNav email={user.email ?? ""}>{children}</AdminNav>;
 }
