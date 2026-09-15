@@ -45,12 +45,6 @@ export async function Navbar() {
           ))}
         </nav>
 
-        <Link
-          href="/blog"
-          className="btn-primary hidden sm:inline-flex"
-        >
-          Baca Artikel
-        </Link>
       </div>
     </header>
   );
