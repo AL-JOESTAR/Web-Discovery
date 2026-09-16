@@ -7,10 +7,17 @@ import {
 } from "@/app/admin/actions";
 import type { AffiliateLink } from "@/lib/types";
 
-export function AffiliateForm({ link }: { link?: AffiliateLink }) {
+export function AffiliateForm({
+  link,
+  kategoriOptions = [],
+}: {
+  link?: AffiliateLink;
+  kategoriOptions?: string[];
+}) {
   const router = useRouter();
   const [nama, setNama] = useState(link?.nama ?? "");
   const [url, setUrl] = useState(link?.url ?? "");
+  const [kategori, setKategori] = useState(link?.kategori ?? "");
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
@@ -19,6 +26,7 @@ export function AffiliateForm({ link }: { link?: AffiliateLink }) {
     const fd = new FormData();
     fd.set("nama", nama);
     fd.set("url", url);
+    fd.set("kategori", kategori);
     if (link) fd.set("id", link.id);
 
     startTransition(async () => {
@@ -55,6 +63,24 @@ export function AffiliateForm({ link }: { link?: AffiliateLink }) {
           required
           placeholder="https://contoh.com/afiliasi/..."
         />
+      </div>
+      <div>
+        <label className="label">Kategori (opsional)</label>
+        <input
+          className="input"
+          list="affiliate-kategori-options"
+          value={kategori}
+          onChange={(e) => setKategori(e.target.value)}
+          placeholder="cth: Atasan, Bawahan, Aksesoris..."
+        />
+        <datalist id="affiliate-kategori-options">
+          {kategoriOptions.map((k) => (
+            <option key={k} value={k} />
+          ))}
+        </datalist>
+        <p className="mt-1.5 text-xs text-stone-500">
+          Dihitung sebagai salah satu kategori tersimpan atau ketik kategori baru.
+        </p>
       </div>
       <div className="flex justify-end gap-3 pt-2">
         <button

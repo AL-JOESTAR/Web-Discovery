@@ -1,9 +1,12 @@
 import Link from "next/link";
-import { getAllAffiliateLinks } from "@/lib/admin-db";
-import { DeleteButton } from "@/components/admin/delete-button";
+import { getAllAffiliateLinks, getAffiliateKategoriOptions } from "@/lib/admin-db";
+import { AffiliateTable } from "@/components/admin/affiliate-table";
 
 export default async function AdminAffiliatePage() {
-  const links = await getAllAffiliateLinks();
+  const [links, kategoriOptions] = await Promise.all([
+    getAllAffiliateLinks(),
+    getAffiliateKategoriOptions(),
+  ]);
 
   return (
     <div>
@@ -32,54 +35,7 @@ export default async function AdminAffiliatePage() {
           </Link>
         </div>
       ) : (
-        <div className="mt-6 overflow-x-auto rounded-xl border border-stone-200 bg-white">
-          <table className="w-full text-left text-sm">
-            <thead className="border-b border-stone-200 bg-stone-50">
-              <tr>
-                <th className="px-4 py-3 font-medium text-stone-500">Nama</th>
-                <th className="hidden px-4 py-3 font-medium text-stone-500 sm:table-cell">
-                  URL
-                </th>
-                <th className="px-4 py-3 text-right font-medium text-stone-500">
-                  Aksi
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {links.map((link) => (
-                <tr
-                  key={link.id}
-                  className="border-b border-stone-100 last:border-0"
-                >
-                  <td className="px-4 py-3 font-medium text-stone-900">
-                    {link.nama}
-                  </td>
-                  <td className="hidden max-w-md truncate px-4 py-3 text-stone-500 sm:table-cell">
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-accent hover:underline"
-                    >
-                      {link.url}
-                    </a>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center justify-end gap-3">
-                      <Link
-                        href={`/admin/affiliate/${link.id}`}
-                        className="text-xs font-medium text-accent hover:underline"
-                      >
-                        Edit
-                      </Link>
-                      <DeleteButton id={link.id} kind="affiliate" />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <AffiliateTable links={links} kategoriOptions={kategoriOptions} />
       )}
     </div>
   );

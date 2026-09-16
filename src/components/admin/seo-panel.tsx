@@ -577,6 +577,7 @@ export function SeoPanel({
               value={coverImage}
               onChange={onCoverImageChange}
               label="Upload Gambar Utama"
+              onAltAutoFill={onCoverAltChange}
             />
             {coverImage && (
               <div className="mt-2">

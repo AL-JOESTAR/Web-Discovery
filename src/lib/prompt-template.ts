@@ -1,4 +1,4 @@
-export type Affiliate = { nama: string; url: string };
+export type Affiliate = { nama: string; url: string; kategori?: string | null };
 
 export const PROMPT_TOPIC_MARKER = "[MASUKKAN JUDUL ATAU TOPIK DI SINI]";
 

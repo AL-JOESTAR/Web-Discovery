@@ -25,6 +25,7 @@ export function GalleryInput({
             value={item.url}
             onChange={(url) => updateItem(index, { url })}
             label={`Gambar ${index + 1}`}
+            onAltAutoFill={(alt) => updateItem(index, { alt })}
           />
           <input
             className="input mt-2 text-xs"

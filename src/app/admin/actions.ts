@@ -492,6 +492,7 @@ export async function createAffiliateLink(
   await requireAdmin();
   const nama = String(formData.get("nama") || "").trim();
   const url = String(formData.get("url") || "").trim();
+  const kategori = String(formData.get("kategori") || "").trim() || null;
 
   if (!nama) return { ok: false, error: "Nama harus diisi." };
   if (!URL_RE.test(url)) {
@@ -500,7 +501,7 @@ export async function createAffiliateLink(
 
   const { data, error } = await adminClient()
     .from("affiliate_links")
-    .insert({ nama, url })
+    .insert({ nama, url, kategori })
     .select("id, nama")
     .single();
   if (error) return { ok: false, error: "Gagal menyimpan link afiliasi." };
@@ -518,6 +519,7 @@ export async function updateAffiliateLink(
   const id = String(formData.get("id") || "").trim();
   const nama = String(formData.get("nama") || "").trim();
   const url = String(formData.get("url") || "").trim();
+  const kategori = String(formData.get("kategori") || "").trim() || null;
 
   if (!id || !nama) return { ok: false, error: "Data tidak lengkap." };
   if (!URL_RE.test(url)) {
@@ -526,7 +528,7 @@ export async function updateAffiliateLink(
 
   const { error } = await adminClient()
     .from("affiliate_links")
-    .update({ nama, url, updated_at: new Date().toISOString() })
+    .update({ nama, url, kategori, updated_at: new Date().toISOString() })
     .eq("id", id);
   if (error) return { ok: false, error: "Gagal mengupdate link afiliasi." };
 
@@ -573,4 +575,119 @@ export async function uploadImage(formData: FormData): Promise<
   } = adminClient().storage.from("images").getPublicUrl(path);
 
   return { ok: true, url: publicUrl };
+}
+
+// ─── Pexels Image Search ─────────────────────────────────────────────────────
+
+export type PexelsSearchImage = {
+  id: number;
+  thumbnail: string;
+  full: string;
+  alt: string;
+  photographer: string;
+};
+
+export type PexelsSearchResponse =
+  | { ok: false; error: string }
+  | { ok: true; images: PexelsSearchImage[] };
+
+export async function searchPexels(
+  query: string
+): Promise<PexelsSearchResponse> {
+  await requireAdmin();
+  const apiKey = process.env.PEXELS_API_KEY;
+  if (!apiKey) {
+    return { ok: false, error: "PEXELS_API_KEY belum dikonfigurasi." };
+  }
+  const q = query.trim();
+  if (!q) return { ok: false, error: "Kata kunci pencarian kosong." };
+
+  const url = new URL("https://api.pexels.com/v1/search");
+  url.searchParams.set("query", q);
+  url.searchParams.set("per_page", "10");
+  url.searchParams.set("orientation", "landscape");
+
+  try {
+    const res = await fetch(url, {
+      headers: { Authorization: apiKey },
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      return {
+        ok: false,
+        error:
+          res.status === 401
+            ? "API key Pexels tidak valid."
+            : `Pexels API error (${res.status}).`,
+      };
+    }
+    const data = await res.json();
+    const photos = (data as { photos?: unknown[] }).photos ?? [];
+    const images: PexelsSearchImage[] = photos
+      .map((p) => {
+        const photo = p as {
+          id?: number;
+          src?: { medium?: string; large2x?: string; original?: string };
+          alt?: string;
+          photographer?: string;
+        };
+        return {
+          id: photo.id ?? 0,
+          thumbnail: photo.src?.medium ?? "",
+          full: photo.src?.large2x ?? photo.src?.original ?? "",
+          alt: photo.alt ?? "",
+          photographer: photo.photographer ?? "",
+        };
+      })
+      .filter((img) => img.thumbnail && img.full);
+    return { ok: true, images };
+  } catch {
+    return { ok: false, error: "Gagal menghubungi Pexels." };
+  }
+}
+
+export type DownloadPexelsResponse =
+  | { ok: false; error: string }
+  | { ok: true; url: string };
+
+export async function downloadPexelsImage(
+  imageUrl: string
+): Promise<DownloadPexelsResponse> {
+  await requireAdmin();
+  if (!URL_RE.test(imageUrl)) {
+    return { ok: false, error: "URL gambar tidak valid." };
+  }
+
+  try {
+    const res = await fetch(imageUrl, { cache: "no-store" });
+    if (!res.ok) {
+      return { ok: false, error: "Gagal mengunduh gambar dari Pexels." };
+    }
+    const blob = await res.blob();
+    const ext =
+      blob.type === "image/png"
+        ? "png"
+        : blob.type === "image/webp"
+          ? "webp"
+          : "jpg";
+    const path = `pexels/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+
+    const { error } = await adminClient().storage
+      .from("images")
+      .upload(path, blob, {
+        contentType: blob.type || "image/jpeg",
+        upsert: false,
+      });
+    if (error) {
+      return { ok: false, error: `Gagal upload: ${error.message}` };
+    }
+
+    const {
+      data: { publicUrl },
+    } = adminClient().storage.from("images").getPublicUrl(path);
+
+    return { ok: true, url: publicUrl };
+  } catch {
+    return { ok: false, error: "Gagal mengunduh gambar." };
+  }
 }

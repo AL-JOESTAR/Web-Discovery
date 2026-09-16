@@ -79,9 +79,14 @@ create table if not exists public.affiliate_links (
   id uuid primary key default gen_random_uuid(),
   nama text not null,
   url text not null,
+  kategori text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- Migrasi untuk database lama: tambah kolom kategori jika belum ada
+alter table public.affiliate_links
+  add column if not exists kategori text;
 
 -- =============================================================
 -- RLS (Row Level Security)

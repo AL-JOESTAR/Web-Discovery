@@ -19,6 +19,7 @@ export function PromptPanel({
 }) {
   const [topic, setTopic] = useState(initialTopic);
   const [affiliates, setAffiliates] = useState<Affiliate[]>([]);
+  const [kategoriFilter, setKategoriFilter] = useState("");
   const [template, setTemplate] = useState(DEFAULT_PROMPT_TEMPLATE);
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
@@ -52,6 +53,18 @@ export function PromptPanel({
     [template, topic, affiliates]
   );
 
+  const kategoriOptions = useMemo(
+    () =>
+      [
+        ...new Set(
+          savedAffiliates
+            .map((a) => a.kategori?.trim())
+            .filter((k): k is string => !!k)
+        ),
+      ].sort((a, b) => a.localeCompare(b)),
+    [savedAffiliates]
+  );
+
   const availableOptions = useMemo(
     () =>
       savedAffiliates.filter(
@@ -60,9 +73,12 @@ export function PromptPanel({
           a.url.trim() &&
           !affiliates.some(
             (s) => s.url === a.url || s.nama.toLowerCase() === a.nama.toLowerCase()
-          )
+          ) &&
+          (!kategoriFilter ||
+            (a.kategori ?? "").trim().toLowerCase() ===
+              kategoriFilter.toLowerCase())
       ),
-    [savedAffiliates, affiliates]
+    [savedAffiliates, affiliates, kategoriFilter]
   );
 
   function addSelected(url: string) {
@@ -75,7 +91,10 @@ export function PromptPanel({
           s.nama.toLowerCase() === found.nama.toLowerCase()
       )
         ? prev
-        : [...prev, { nama: found.nama, url: found.url }]
+        : [
+            ...prev,
+            { nama: found.nama, url: found.url, kategori: found.kategori },
+          ]
     );
   }
 
@@ -135,7 +154,21 @@ export function PromptPanel({
                 : "Semua link tersimpan sudah terpilih."}
             </p>
           ) : (
-            <div className="mt-3">
+            <div className="mt-3 space-y-2">
+              {kategoriOptions.length > 0 && (
+                <select
+                  className="select w-full"
+                  value={kategoriFilter}
+                  onChange={(e) => setKategoriFilter(e.target.value)}
+                >
+                  <option value="">Semua kategori</option>
+                  {kategoriOptions.map((k) => (
+                    <option key={k} value={k}>
+                      {k}
+                    </option>
+                  ))}
+                </select>
+              )}
               <select
                 name="affiliate-select"
                 className="select w-full"
@@ -144,10 +177,15 @@ export function PromptPanel({
                   if (e.target.value) addSelected(e.target.value);
                 }}
               >
-                <option value="">Pilih link afiliasi...</option>
+                <option value="">
+                  {kategoriFilter
+                    ? `Pilih link kategori "${kategoriFilter}"...`
+                    : "Pilih link afiliasi..."}
+                </option>
                 {availableOptions.map((a) => (
                   <option key={a.url} value={a.url}>
                     {a.nama}
+                    {a.kategori ? ` (${a.kategori})` : ""}
                   </option>
                 ))}
               </select>
@@ -169,6 +207,11 @@ export function PromptPanel({
                     <p className="truncate text-sm font-medium text-stone-800">
                       {a.nama}
                     </p>
+                    {a.kategori && (
+                      <p className="truncate text-xs font-medium text-accent">
+                        {a.kategori}
+                      </p>
+                    )}
                     <p className="truncate text-xs text-stone-400">{a.url}</p>
                   </div>
                   <button

@@ -54,6 +54,8 @@ export const hasAdminEnv =
   !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
   !!process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+export const hasPexelsEnv = !!process.env.PEXELS_API_KEY;
+
 export function getSiteUrl(): string {
   const fromEnv =
     process.env.NEXT_PUBLIC_SITE_URL ??
