@@ -18,7 +18,7 @@ export async function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-stone-200/60 bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-line bg-background/80 backdrop-blur-md">
       <div className="container-wide flex h-[4.5rem] items-center justify-between gap-4">
         <Link href="/" className="group flex items-center gap-2">
           {site?.logo_url ? (
@@ -29,7 +29,7 @@ export async function Navbar() {
               className="h-8 w-auto object-contain"
             />
           ) : (
-            <span className="font-serif text-xl font-bold tracking-tight text-stone-900 transition-colors group-hover:text-accent">
+            <span className="font-serif text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-accent">
               {name}
             </span>
           )}
@@ -40,7 +40,7 @@ export async function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-stone-600 transition-colors hover:text-accent"
+              className="text-sm font-medium text-muted transition-colors hover:text-accent"
             >
               {link.label}
             </Link>

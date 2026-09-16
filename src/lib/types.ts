@@ -59,6 +59,16 @@ export type AffiliateLink = {
   updated_at: string;
 };
 
+export type ThemeSettings = {
+  accent: string;
+  background: string;
+  foreground: string;
+  surface: string;
+  muted: string;
+  line: string;
+  sectionDark: string;
+};
+
 export type SiteSettings = {
   site: {
     name: string;
@@ -73,10 +83,12 @@ export type SiteSettings = {
       tiktok?: string;
       facebook?: string;
       twitter?: string;
-      youtube?: string;
       whatsapp?: string;
+      youtube?: string;
       email?: string;
     };
+    landing?: LandingContent;
+    theme?: ThemeSettings;
   };
 };
 

@@ -36,7 +36,7 @@ export function PageHero({
           className={
             align === "center"
               ? "page-hero-desc"
-              : "mt-4 text-base leading-relaxed text-stone-500 sm:text-lg"
+              : "mt-4 text-base leading-relaxed text-muted sm:text-lg"
           }
         >
           {description}

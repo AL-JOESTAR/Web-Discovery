@@ -129,7 +129,7 @@ function HeroLayout({ article }: { article: Article }) {
             {article.title}
           </h1>
           {article.excerpt && (
-            <p className="mt-4 text-lg leading-relaxed text-stone-500">
+            <p className="mt-4 text-lg leading-relaxed text-muted">
               {article.excerpt}
             </p>
           )}
@@ -171,14 +171,14 @@ function MagazineLayout({ article }: { article: Article }) {
               alt={article.title}
               className="absolute inset-0 h-full w-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/50 to-stone-950/10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-section-dark via-section-dark/50 to-section-dark/10" />
           </>
         ) : (
           <div className="absolute inset-0 bg-stone-100" />
         )}
         <div
           className={`relative flex min-h-[min(70svh,40rem)] flex-col justify-end p-6 sm:p-10 lg:p-14 ${
-            onDark ? "text-white" : "text-stone-900"
+            onDark ? "text-white" : "text-foreground"
           }`}
         >
           <CategoryBadge article={article} onDark={onDark} />
@@ -188,7 +188,7 @@ function MagazineLayout({ article }: { article: Article }) {
           {article.excerpt && (
             <p
               className={`mt-4 max-w-xl text-base leading-relaxed sm:text-lg ${
-                onDark ? "text-stone-200" : "text-stone-500"
+                onDark ? "text-stone-200" : "text-muted"
               }`}
             >
               {article.excerpt}

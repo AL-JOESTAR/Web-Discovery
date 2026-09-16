@@ -75,7 +75,7 @@ export default async function BlogPage({
           className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
             !kategoriSlug
               ? "border-accent bg-accent text-white"
-              : "border-stone-300 text-stone-600 hover:border-stone-400"
+              : "border-line text-muted hover:border-muted"
           }`}
         >
           Semua
@@ -87,7 +87,7 @@ export default async function BlogPage({
             className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
               category.slug === kategoriSlug
                 ? "border-accent bg-accent text-white"
-                : "border-stone-300 text-stone-600 hover:border-stone-400"
+                : "border-line text-muted hover:border-muted"
             }`}
           >
             {category.name}
@@ -96,8 +96,8 @@ export default async function BlogPage({
       </div>
 
       {articles.length === 0 ? (
-        <div className="mx-auto mt-14 max-w-md rounded-2xl border border-dashed border-stone-300 bg-white p-12 text-center">
-          <p className="font-serif text-lg text-stone-500">
+        <div className="mx-auto mt-14 max-w-md rounded-2xl border border-dashed border-line bg-surface p-12 text-center">
+          <p className="font-serif text-lg text-muted">
             Belum ada artikel pada kategori ini.
           </p>
         </div>
@@ -118,7 +118,7 @@ export default async function BlogPage({
           >
             &larr; Sebelumnya
           </Link>
-          <span className="px-2 text-sm text-stone-500">
+          <span className="px-2 text-sm text-muted">
             Halaman {page} dari {totalPages}
           </span>
           <Link

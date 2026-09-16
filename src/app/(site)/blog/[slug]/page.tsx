@@ -95,7 +95,7 @@ export default async function ArticlePage({
           Blog
         </Link>
         <span className="mx-1">/</span>
-        <span className="text-stone-600">{article.title}</span>
+        <span className="text-muted">{article.title}</span>
       </nav>
 
       <div className={template === "hero" ? "container-wide" : undefined}>
@@ -103,7 +103,7 @@ export default async function ArticlePage({
       </div>
 
       <div
-        className={`mt-12 border-t border-stone-200 pt-6 text-sm text-stone-400 ${
+        className={`mt-12 border-t border-line pt-6 text-sm text-stone-400 ${
           wide ? "container-wide" : ""
         }`}
       >

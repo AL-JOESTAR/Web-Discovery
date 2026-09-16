@@ -33,11 +33,11 @@ export default async function KategoriPage() {
             className="card group flex items-center justify-between p-6 transition-shadow hover:shadow-md"
           >
             <div>
-              <h2 className="font-serif text-lg font-bold text-stone-900 group-hover:text-accent">
+              <h2 className="font-serif text-lg font-bold text-foreground group-hover:text-accent">
                 {category.name}
               </h2>
               {category.description && (
-                <p className="mt-1 line-clamp-2 text-sm text-stone-500">
+                <p className="mt-1 line-clamp-2 text-sm text-muted">
                   {category.description}
                 </p>
               )}
@@ -48,8 +48,8 @@ export default async function KategoriPage() {
           </Link>
         ))}
         {categories.length === 0 && (
-          <div className="col-span-full rounded-2xl border border-dashed border-stone-300 bg-white p-12 text-center">
-            <p className="font-serif text-lg text-stone-500">
+          <div className="col-span-full rounded-2xl border border-dashed border-line bg-surface p-12 text-center">
+            <p className="font-serif text-lg text-muted">
               Belum ada kategori.
             </p>
           </div>

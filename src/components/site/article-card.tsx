@@ -16,7 +16,7 @@ export function ArticleCard({
     <Link
       href={href}
       className={cn(
-        "group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-sm shadow-stone-900/5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-stone-900/10",
+        "group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-sm shadow-stone-900/5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-stone-900/10",
         featured && "lg:flex-row",
         className
       )}
@@ -65,7 +65,7 @@ export function ArticleCard({
         </div>
         <h3
           className={cn(
-            "mt-2 font-serif font-bold tracking-tight text-stone-900 transition-colors group-hover:text-accent",
+            "mt-2 font-serif font-bold tracking-tight text-foreground transition-colors group-hover:text-accent",
             featured ? "text-2xl sm:text-3xl" : "text-lg"
           )}
         >
@@ -74,7 +74,7 @@ export function ArticleCard({
         {article.excerpt && (
           <p
             className={cn(
-              "mt-2 leading-relaxed text-stone-500",
+              "mt-2 leading-relaxed text-muted",
               featured ? "line-clamp-3 text-base" : "line-clamp-2 flex-1 text-sm"
             )}
           >

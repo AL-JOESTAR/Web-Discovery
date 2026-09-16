@@ -3,8 +3,9 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { updateSiteSettings } from "@/app/admin/actions";
 import { ImageUpload } from "@/components/admin/image-upload";
-import { DEFAULT_LANDING } from "@/lib/config";
-import type { SiteSettings, LandingContent } from "@/lib/types";
+import { ThemeEditor } from "@/components/admin/theme-editor";
+import { DEFAULT_LANDING, DEFAULT_THEME } from "@/lib/config";
+import type { SiteSettings, LandingContent, ThemeSettings } from "@/lib/types";
 
 type SiteConfig = SiteSettings["site"] & Record<string, unknown>;
 
@@ -24,6 +25,9 @@ export function SettingsForm({ initial }: { initial: SiteSettings | null }) {
   );
   const [landing, setLanding] = useState<LandingContent>(
     (settings.landing as LandingContent | undefined) ?? DEFAULT_LANDING
+  );
+  const [theme, setTheme] = useState<ThemeSettings>(
+    (settings.theme as ThemeSettings | undefined) ?? { ...DEFAULT_THEME }
   );
   const [error, setError] = useState("");
   const [ok, setOk] = useState(false);
@@ -53,7 +57,7 @@ export function SettingsForm({ initial }: { initial: SiteSettings | null }) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const fd = new FormData();
-    fd.set("settings", JSON.stringify({ ...settings, landing }));
+    fd.set("settings", JSON.stringify({ ...settings, landing, theme }));
     setOk(false);
     startTransition(async () => {
       const res = await updateSiteSettings({ ok: false }, fd);
@@ -164,6 +168,14 @@ export function SettingsForm({ initial }: { initial: SiteSettings | null }) {
             />
           </Field>
         </div>
+      </Fieldset>
+
+      <Fieldset title="Visual Theme (Warna Website)">
+        <ThemeEditor value={theme} onChange={setTheme} />
+        <p className="mt-3 text-xs text-stone-500">
+          Warna ini dipakai di seluruh halaman publik (beranda, blog, kategori, dan
+          artikel). Simpan agar permanen dan tampil untuk pengunjung.
+        </p>
       </Fieldset>
 
       <Fieldset title="Landing Page — Hero">

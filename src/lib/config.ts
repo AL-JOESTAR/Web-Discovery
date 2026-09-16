@@ -1,4 +1,14 @@
-import type { LandingContent } from "@/lib/types";
+import type { LandingContent, ThemeSettings } from "@/lib/types";
+
+export const DEFAULT_THEME: ThemeSettings = {
+  accent: "#b8452c",
+  background: "#faf9f7",
+  foreground: "#1c1917",
+  surface: "#ffffff",
+  muted: "#78716c",
+  line: "#e7e5e4",
+  sectionDark: "#0c0a09",
+};
 
 export const TAGS = {
   articles: "articles",

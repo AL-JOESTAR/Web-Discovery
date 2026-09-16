@@ -16,7 +16,7 @@ export function Hero({
   image: string | null;
 }) {
   return (
-    <section className="relative isolate overflow-hidden bg-stone-950 text-white">
+    <section className="relative isolate overflow-hidden bg-section-dark text-white">
       {image ? (
         <>
           <div className="absolute inset-0">
@@ -27,10 +27,10 @@ export function Hero({
               className="h-full w-full object-cover object-center lg:object-[70%_center]"
             />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/75 to-stone-950/25 lg:bg-gradient-to-r lg:from-stone-950 lg:via-stone-950/80 lg:to-stone-950/15" />
+          <div className="absolute inset-0 bg-gradient-to-t from-section-dark via-section-dark/75 to-section-dark/25 lg:bg-gradient-to-r lg:from-section-dark lg:via-section-dark/80 lg:to-section-dark/15" />
         </>
       ) : (
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(184,69,44,0.28),_transparent_55%),linear-gradient(160deg,#1c1917_0%,#292524_45%,#1c1917_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_color-mix(in_srgb,var(--accent)_28%,transparent),_transparent_55%),linear-gradient(160deg,var(--section-dark)_0%,color-mix(in_srgb,var(--section-dark)_90%,white)_45%,var(--section-dark)_100%)]" />
       )}
 
       <div className="relative flex min-h-[calc(100svh-4.5rem)] flex-col justify-end px-4 py-16 sm:justify-center sm:px-6 sm:pt-20 sm:pb-32 lg:px-12 lg:pt-24 lg:pb-40">

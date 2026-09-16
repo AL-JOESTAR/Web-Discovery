@@ -1,7 +1,14 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { publicClient } from "@/lib/supabase/public";
-import { TAGS, hasPublicEnv } from "@/lib/config";
-import type { Article, Category, LandingContent, Page, SiteSettings } from "@/lib/types";
+import { DEFAULT_THEME, TAGS, hasPublicEnv } from "@/lib/config";
+import type {
+  Article,
+  Category,
+  LandingContent,
+  Page,
+  SiteSettings,
+  ThemeSettings,
+} from "@/lib/types";
 
 export async function getSiteSettings(): Promise<SiteSettings | null> {
   "use cache";
@@ -15,6 +22,19 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
     .single();
   if (!data) return null;
   return { site: (data.value as SiteSettings["site"]) ?? {} };
+}
+
+export async function getThemeSettings(): Promise<ThemeSettings> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(TAGS.settings);
+  const settings = await getSiteSettings();
+  const theme = (settings?.site as unknown as Record<string, unknown>)
+    ?.theme as ThemeSettings | undefined;
+  if (theme && typeof theme === "object") {
+    return { ...DEFAULT_THEME, ...theme };
+  }
+  return DEFAULT_THEME;
 }
 
 export async function getLandingContent(): Promise<LandingContent> {

@@ -7,7 +7,7 @@ export default function NotFound() {
       <h1 className="mt-4 font-serif text-3xl font-bold tracking-tight sm:text-4xl">
         Halaman Tidak Ditemukan
       </h1>
-      <p className="mt-3 max-w-md text-stone-500">
+      <p className="mt-3 max-w-md text-muted">
         Halaman yang kamu cari tidak ada atau sudah dihapus.
       </p>
       <Link href="/" className="btn-primary mt-8">

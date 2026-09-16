@@ -53,7 +53,7 @@ export default async function CustomPage({
           Beranda
         </Link>
         <span className="mx-1">/</span>
-        <span className="text-stone-600">{page.title}</span>
+        <span className="text-muted">{page.title}</span>
       </nav>
 
       <h1 className="font-serif text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
@@ -61,7 +61,7 @@ export default async function CustomPage({
       </h1>
 
       <div
-        className="mt-8 space-y-4 leading-relaxed text-stone-700 tiptap-content prose prose-stone max-w-none"
+        className="mt-8 space-y-4 leading-relaxed text-muted tiptap-content prose prose-stone max-w-none"
         dangerouslySetInnerHTML={{ __html: page.content_html || "" }}
       />
 

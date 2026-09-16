@@ -71,7 +71,7 @@ export default async function KategoriDetailPage({
           Kategori
         </Link>
         <span className="mx-1">/</span>
-        <span className="text-stone-600">{category.name}</span>
+        <span className="text-muted">{category.name}</span>
       </nav>
 
       <PageHero
@@ -81,8 +81,8 @@ export default async function KategoriDetailPage({
       />
 
       {articles.length === 0 ? (
-        <div className="mt-12 rounded-2xl border border-dashed border-stone-300 bg-white p-12 text-center">
-          <p className="font-serif text-lg text-stone-500">
+        <div className="mt-12 rounded-2xl border border-dashed border-line bg-surface p-12 text-center">
+          <p className="font-serif text-lg text-muted">
             Belum ada artikel di kategori ini.
           </p>
         </div>

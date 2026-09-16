@@ -33,7 +33,7 @@ export function SectionHeading({
           {title}
         </h2>
         {description && (
-          <p className="mt-3 max-w-lg text-stone-500">{description}</p>
+          <p className="mt-3 max-w-lg text-muted">{description}</p>
         )}
       </div>
       {actionHref && actionLabel && (

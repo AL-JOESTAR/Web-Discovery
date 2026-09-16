@@ -21,11 +21,11 @@ export async function Footer() {
   ).filter(([, url]) => Boolean(url));
 
   return (
-    <footer className="border-t border-stone-200 bg-white">
+    <footer className="border-t border-line bg-surface">
       <div className="container-wide grid gap-10 py-14 md:grid-cols-4 md:gap-12">
         <div className="md:col-span-2">
-          <p className="font-serif text-2xl font-bold text-stone-900">{name}</p>
-          <p className="mt-3 max-w-sm text-sm leading-relaxed text-stone-500">
+          <p className="font-serif text-2xl font-bold text-foreground">{name}</p>
+          <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
             {site?.description ??
               "Inspirasi dan panduan fashion terbaru untuk gaya hidup harianmu."}
           </p>
@@ -37,7 +37,7 @@ export async function Footer() {
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full border border-stone-200 px-3.5 py-1.5 text-xs font-medium capitalize text-stone-600 transition-colors hover:border-accent hover:text-accent"
+                  className="rounded-full border border-line px-3.5 py-1.5 text-xs font-medium capitalize text-muted transition-colors hover:border-accent hover:text-accent"
                 >
                   {key}
                 </a>
@@ -55,7 +55,7 @@ export async function Footer() {
               <li key={category.id}>
                 <Link
                   href={`/kategori/${category.slug}`}
-                  className="text-sm text-stone-600 transition-colors hover:text-accent"
+                  className="text-sm text-muted transition-colors hover:text-accent"
                 >
                   {category.name}
                 </Link>
@@ -70,18 +70,18 @@ export async function Footer() {
           </p>
           <ul className="mt-4 space-y-2.5">
             <li>
-              <Link
-                href="/blog"
-                className="text-sm text-stone-600 transition-colors hover:text-accent"
-              >
-                Semua Artikel
-              </Link>
+<Link
+                  href="/blog"
+                  className="text-sm text-muted transition-colors hover:text-accent"
+                >
+                  Semua Artikel
+                </Link>
             </li>
             {pages.map((page) => (
               <li key={page.id}>
                 <Link
                   href={`/${page.slug}`}
-                  className="text-sm text-stone-600 transition-colors hover:text-accent"
+                  className="text-sm text-muted transition-colors hover:text-accent"
                 >
                   {page.title}
                 </Link>
@@ -90,7 +90,7 @@ export async function Footer() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-stone-200">
+      <div className="border-t border-line">
         <div className="container-wide flex justify-center py-5 text-xs text-stone-400">
           <p>© 2026 {name}. Semua hak dilindungi.</p>
         </div>

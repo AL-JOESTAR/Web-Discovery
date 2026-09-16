@@ -31,13 +31,13 @@ export default async function HomePage() {
       />
 
       {categories.length > 0 && (
-        <section className="border-b border-stone-200 bg-white">
+        <section className="border-b border-line bg-surface">
           <div className="container-wide flex gap-3 overflow-x-auto py-5 [-ms-overflow-style:none] [scrollbar-width:none] sm:flex-wrap sm:overflow-visible [&::-webkit-scrollbar]:hidden">
             {categories.map((category) => (
               <Link
                 key={category.id}
                 href={`/kategori/${category.slug}`}
-                className="shrink-0 rounded-full border border-stone-200 bg-stone-50 px-4 py-1.5 text-sm font-medium text-stone-700 transition-colors hover:border-accent hover:bg-accent hover:text-white"
+                className="shrink-0 rounded-full border border-line bg-stone-50 px-4 py-1.5 text-sm font-medium text-muted transition-colors hover:border-accent hover:bg-accent hover:text-white"
               >
                 {category.name}
               </Link>
@@ -55,8 +55,8 @@ export default async function HomePage() {
           actionLabel="Lihat Semua"
         />
         {articles.length === 0 ? (
-          <div className="mt-10 rounded-2xl border border-dashed border-stone-300 bg-white p-12 text-center">
-            <p className="font-serif text-lg text-stone-500">
+          <div className="mt-10 rounded-2xl border border-dashed border-line bg-surface p-12 text-center">
+            <p className="font-serif text-lg text-muted">
               Belum ada artikel yang dipublikasikan.
             </p>
             <p className="mt-1 text-sm text-stone-400">
@@ -78,7 +78,7 @@ export default async function HomePage() {
       </section>
 
       {landing.about.title && (
-        <section className="border-y border-stone-200 bg-white">
+        <section className="border-y border-line bg-surface">
           <div className="container-wide grid items-center gap-10 py-16 sm:py-24 lg:grid-cols-2 lg:gap-16">
             <div>
               <p className="font-serif text-sm uppercase tracking-[0.3em] text-accent">
@@ -87,7 +87,7 @@ export default async function HomePage() {
               <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight sm:text-4xl">
                 {landing.about.title}
               </h2>
-              <p className="mt-5 max-w-lg text-lg leading-relaxed text-stone-600">
+              <p className="mt-5 max-w-lg text-lg leading-relaxed text-muted">
                 {landing.about.content}
               </p>
             </div>
@@ -118,11 +118,11 @@ export default async function HomePage() {
           />
           <div className="mt-12 grid gap-6 sm:grid-cols-3">
             {landing.features.items.map((feature) => (
-              <div key={feature.title} className="card p-7">
-                <p className="font-serif text-xl font-semibold text-stone-900">
+              <div key={feature.title} className="card border-line bg-surface p-7">
+                <p className="font-serif text-xl font-semibold text-foreground">
                   {feature.title}
                 </p>
-                <p className="mt-3 text-sm leading-relaxed text-stone-500">
+                <p className="mt-3 text-sm leading-relaxed text-muted">
                   {feature.description}
                 </p>
               </div>
@@ -132,7 +132,7 @@ export default async function HomePage() {
       )}
 
       {landing.newsletter.title && (
-        <section className="bg-stone-950 px-4 py-16 text-center text-white sm:py-24">
+        <section className="bg-section-dark px-4 py-16 text-center text-white sm:py-24">
           <div className="mx-auto max-w-xl">
             <p className="font-serif text-sm uppercase tracking-[0.3em] text-accent">
               Newsletter
