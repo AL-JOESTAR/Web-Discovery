@@ -18,7 +18,7 @@ export async function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-line bg-background">
       <div className="container-wide flex h-[4.5rem] items-center justify-between gap-4">
         <Link href="/" className="group flex items-center gap-2">
           {site?.logo_url ? (
@@ -26,7 +26,7 @@ export async function Navbar() {
             <img
               src={site.logo_url}
               alt={name}
-              className="h-8 w-auto object-contain"
+              className="h-auto max-h-9 w-auto max-w-[12rem] object-contain"
             />
           ) : (
             <span className="font-serif text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-accent">
