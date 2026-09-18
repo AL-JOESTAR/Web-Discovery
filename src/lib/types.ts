@@ -30,6 +30,7 @@ export type Article = {
   seo_title: string | null;
   seo_description: string | null;
   seo_keywords: string | null;
+  focus_keyphrase: string | null;
   template: ArticleTemplate;
   gallery: GalleryImage[];
   published_at: string | null;

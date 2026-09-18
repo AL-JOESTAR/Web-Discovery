@@ -29,6 +29,7 @@ create table if not exists public.articles (
   seo_title text,
   seo_description text,
   seo_keywords text,
+  focus_keyphrase text,
   template text not null default 'classic' check (template in ('classic','hero','magazine')),
   gallery jsonb not null default '[]'::jsonb,
   published_at timestamptz,
@@ -42,6 +43,8 @@ alter table public.articles
     check (template in ('classic','hero','magazine'));
 alter table public.articles
   add column if not exists gallery jsonb not null default '[]'::jsonb;
+alter table public.articles
+  add column if not exists focus_keyphrase text;
 
 create index if not exists articles_slug_idx on public.articles(slug);
 create index if not exists articles_status_idx on public.articles(status);

@@ -55,6 +55,8 @@ export async function createArticle(
     String(formData.get("seo_description") || "").trim() || null;
   const seo_keywords =
     String(formData.get("seo_keywords") || "").trim() || null;
+  const focus_keyphrase =
+    String(formData.get("focus_keyphrase") || "").trim() || null;
   const template = parseArticleTemplate(
     String(formData.get("template") || "classic")
   );
@@ -82,6 +84,7 @@ export async function createArticle(
       seo_title,
       seo_description,
       seo_keywords,
+      focus_keyphrase,
       template,
       gallery,
       published_at,
@@ -124,6 +127,8 @@ export async function updateArticle(
     String(formData.get("seo_description") || "").trim() || null;
   const seo_keywords =
     String(formData.get("seo_keywords") || "").trim() || null;
+  const focus_keyphrase =
+    String(formData.get("focus_keyphrase") || "").trim() || null;
   const template = parseArticleTemplate(
     String(formData.get("template") || "classic")
   );
@@ -158,6 +163,7 @@ export async function updateArticle(
     seo_title,
     seo_description,
     seo_keywords,
+    focus_keyphrase,
     template,
     gallery,
     updated_at: new Date().toISOString(),

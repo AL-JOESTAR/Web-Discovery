@@ -68,8 +68,8 @@ export const hasPexelsEnv = !!process.env.PEXELS_API_KEY;
 
 export function getSiteUrl(): string {
   const fromEnv =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    process.env.NEXT_PUBLIC_VERCEL_URL ??
+    process.env.SITE_URL ??
+    process.env.VERCEL_URL ??
     process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!fromEnv) return "http://localhost:3000";
   if (fromEnv.startsWith("http")) return fromEnv;

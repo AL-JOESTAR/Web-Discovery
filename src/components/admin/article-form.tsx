@@ -65,7 +65,8 @@ export function ArticleForm({
   );
   const [seoKeywords, setSeoKeywords] = useState(article?.seo_keywords ?? "");
   const [focusKeyword, setFocusKeyword] = useState(
-    (article?.seo_keywords ?? "").split(",")[0] || ""
+    article?.focus_keyphrase ??
+      ((article?.seo_keywords ?? "").split(",")[0] || "")
   );
   const [contentHtml, setContentHtml] = useState(
     article?.content_html ?? ""
@@ -84,16 +85,6 @@ export function ArticleForm({
 
   function handleFocusKeywordChange(k: string) {
     setFocusKeyword(k);
-    setSeoKeywords((prev) => {
-      const existing = prev
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean);
-      if (k.trim() && !existing.includes(k.trim().toLowerCase())) {
-        return [...existing, k.trim().toLowerCase()].join(", ");
-      }
-      return prev;
-    });
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -108,6 +99,7 @@ export function ArticleForm({
     fd.set("seo_title", article?.seo_title || title);
     fd.set("seo_description", seoDescription || excerpt);
     fd.set("seo_keywords", seoKeywords);
+    fd.set("focus_keyphrase", focusKeyword);
     fd.set("content_html", contentHtml);
     fd.set("content_json", contentJson);
     fd.set("template", template);
