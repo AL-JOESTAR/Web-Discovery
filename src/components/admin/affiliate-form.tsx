@@ -66,20 +66,21 @@ export function AffiliateForm({
       </div>
       <div>
         <label className="label">Kategori (opsional)</label>
-        <input
-          className="input"
-          list="affiliate-kategori-options"
+        <select
+          className="select"
           value={kategori}
           onChange={(e) => setKategori(e.target.value)}
-          placeholder="cth: Atasan, Bawahan, Aksesoris..."
-        />
-        <datalist id="affiliate-kategori-options">
+        >
+          <option value="">Pilih kategori...</option>
           {kategoriOptions.map((k) => (
-            <option key={k} value={k} />
+            <option key={k} value={k}>
+              {k}
+            </option>
           ))}
-        </datalist>
+        </select>
         <p className="mt-1.5 text-xs text-stone-500">
-          Dihitung sebagai salah satu kategori tersimpan atau ketik kategori baru.
+          Kategori mengikuti daftar kategori artikel. Buka Admin Kategori untuk
+          menambah kategori baru.
         </p>
       </div>
       <div className="flex justify-end gap-3 pt-2">

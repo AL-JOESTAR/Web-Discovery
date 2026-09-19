@@ -91,7 +91,11 @@ export async function getPublishedArticlesPage({
     .from("articles")
     .select("*, category:categories(*)", { count: "exact" })
     .eq("status", "published");
-  if (categorySlug) query = query.eq("category.slug", categorySlug);
+  if (categorySlug) {
+    const category = await getCategoryBySlug(categorySlug);
+    if (!category) return { articles: [], total: 0, totalPages: 0 };
+    query = query.eq("category_id", category.id);
+  }
   query = query
     .order("published_at", { ascending: false })
     .range(from, to);
@@ -150,14 +154,17 @@ export async function getArticlesByCategorySlug(slug: string): Promise<Article[]
   "use cache";
   cacheLife("hours");
   cacheTag(TAGS.articles);
+  cacheTag(TAGS.categories);
   if (!hasPublicEnv) return [];
+  const category = await getCategoryBySlug(slug);
+  if (!category) return [];
   const { data } = await publicClient()
     .from("articles")
     .select(
       "*, category:categories(id, name, slug, description, created_at, updated_at)"
     )
     .eq("status", "published")
-    .eq("category.slug", slug)
+    .eq("category_id", category.id)
     .order("published_at", { ascending: false });
   return (data as Article[] | null) ?? [];
 }

@@ -103,10 +103,9 @@ export async function getAffiliateLinkById(id: string): Promise<AffiliateLink | 
 export async function getAffiliateKategoriOptions(): Promise<string[]> {
   if (!hasAdminEnv) return [];
   const { data } = await db()
-    .from("affiliate_links")
-    .select("kategori")
-    .not("kategori", "is", null)
-    .order("kategori", { ascending: true });
-  const kategoris = (data as { kategori: string }[] | null) ?? [];
-  return [...new Set(kategoris.map((k) => k.kategori.trim()).filter(Boolean))];
+    .from("categories")
+    .select("name")
+    .order("name", { ascending: true });
+  const categories = (data as { name: string }[] | null) ?? [];
+  return [...new Set(categories.map((c) => c.name.trim()).filter(Boolean))];
 }
