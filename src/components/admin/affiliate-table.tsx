@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { DeleteButton } from "@/components/admin/delete-button";
+import { formatPrice } from "@/lib/utils";
 import type { AffiliateLink } from "@/lib/types";
 
 export function AffiliateTable({
@@ -52,7 +53,9 @@ export function AffiliateTable({
           <table className="w-full text-left text-sm">
             <thead className="border-b border-stone-200 bg-stone-50">
               <tr>
+                <th className="px-4 py-3 font-medium text-stone-500">Gambar</th>
                 <th className="px-4 py-3 font-medium text-stone-500">Nama</th>
+                <th className="px-4 py-3 font-medium text-stone-500">Harga</th>
                 <th className="px-4 py-3 font-medium text-stone-500">
                   Kategori
                 </th>
@@ -70,8 +73,27 @@ export function AffiliateTable({
                   key={link.id}
                   className="border-b border-stone-100 last:border-0"
                 >
+                  <td className="px-4 py-3">
+                    {link.gambar ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={link.gambar}
+                        alt={link.nama}
+                        className="h-10 w-12 rounded-md border border-stone-200 object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-10 w-12 items-center justify-center rounded-md bg-stone-100 font-serif text-sm text-stone-400">
+                        {link.nama.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </td>
                   <td className="px-4 py-3 font-medium text-stone-900">
                     {link.nama}
+                  </td>
+                  <td className="px-4 py-3 text-stone-700">
+                    {formatPrice(link.harga) || (
+                      <span className="text-xs text-stone-300">-</span>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     {link.kategori ? (

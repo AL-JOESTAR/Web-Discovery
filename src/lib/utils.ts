@@ -17,6 +17,15 @@ export function slugify(input: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+export function formatPrice(harga: number | null): string {
+  if (harga == null || Number.isNaN(harga)) return "";
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(harga);
+}
+
 export function formatDate(date: string | null): string {
   if (!date) return "";
   return new Intl.DateTimeFormat("id-ID", {

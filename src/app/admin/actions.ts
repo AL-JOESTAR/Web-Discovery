@@ -464,6 +464,14 @@ export async function updateSiteSettings(
 // ─── Affiliate Links ────────────────────────────────────────────────────────
 
 const URL_RE = /^https?:\/\/.+/i;
+
+function parseHarga(raw: FormDataEntryValue | null): number | null | -1 {
+  const value = String(raw ?? "").trim();
+  if (!value) return null;
+  const num = Number(value.replace(",", "."));
+  if (!Number.isFinite(num) || num < 0) return -1;
+  return Math.round(num * 100) / 100;
+}
 const ARTICLE_TEMPLATES = ["classic", "hero", "magazine"] as const;
 type ArticleTemplate = (typeof ARTICLE_TEMPLATES)[number];
 
@@ -499,19 +507,29 @@ export async function createAffiliateLink(
   const nama = String(formData.get("nama") || "").trim();
   const url = String(formData.get("url") || "").trim();
   const kategori = String(formData.get("kategori") || "").trim() || null;
+  const gambar = String(formData.get("gambar") || "").trim() || null;
+  const harga = parseHarga(formData.get("harga"));
 
   if (!nama) return { ok: false, error: "Nama harus diisi." };
   if (!URL_RE.test(url)) {
     return { ok: false, error: "URL tidak valid. Gunakan http:// atau https://." };
   }
+  if (gambar && !URL_RE.test(gambar)) {
+    return { ok: false, error: "URL gambar tidak valid. Gunakan http:// atau https://." };
+  }
+  if (harga === -1) {
+    return { ok: false, error: "Harga tidak valid. Gunakan angka 0 atau lebih." };
+  }
 
   const { data, error } = await adminClient()
     .from("affiliate_links")
-    .insert({ nama, url, kategori })
+    .insert({ nama, url, kategori, gambar, harga })
     .select("id, nama")
     .single();
   if (error) return { ok: false, error: "Gagal menyimpan link afiliasi." };
 
+  revalidateTag(TAGS.affiliate, "hours");
+  revalidatePath("/");
   revalidatePath("/admin/affiliate");
   revalidatePath("/admin/prompt");
   return { ok: true, id: data.id };
@@ -526,18 +544,35 @@ export async function updateAffiliateLink(
   const nama = String(formData.get("nama") || "").trim();
   const url = String(formData.get("url") || "").trim();
   const kategori = String(formData.get("kategori") || "").trim() || null;
+  const gambar = String(formData.get("gambar") || "").trim() || null;
+  const harga = parseHarga(formData.get("harga"));
 
   if (!id || !nama) return { ok: false, error: "Data tidak lengkap." };
   if (!URL_RE.test(url)) {
     return { ok: false, error: "URL tidak valid. Gunakan http:// atau https://." };
   }
+  if (gambar && !URL_RE.test(gambar)) {
+    return { ok: false, error: "URL gambar tidak valid. Gunakan http:// atau https://." };
+  }
+  if (harga === -1) {
+    return { ok: false, error: "Harga tidak valid. Gunakan angka 0 atau lebih." };
+  }
 
   const { error } = await adminClient()
     .from("affiliate_links")
-    .update({ nama, url, kategori, updated_at: new Date().toISOString() })
+    .update({
+      nama,
+      url,
+      kategori,
+      gambar,
+      harga,
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", id);
   if (error) return { ok: false, error: "Gagal mengupdate link afiliasi." };
 
+  revalidateTag(TAGS.affiliate, "hours");
+  revalidatePath("/");
   revalidatePath("/admin/affiliate");
   revalidatePath("/admin/prompt");
   return { ok: true, id };
@@ -551,6 +586,8 @@ export async function deleteAffiliateLink(id: string): Promise<ActionState> {
     .eq("id", id);
   if (error) return { ok: false, error: "Gagal menghapus." };
 
+  revalidateTag(TAGS.affiliate, "hours");
+  revalidatePath("/");
   revalidatePath("/admin/affiliate");
   revalidatePath("/admin/prompt");
   return { ok: true };

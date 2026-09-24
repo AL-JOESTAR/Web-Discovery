@@ -2,6 +2,7 @@ import { cacheLife, cacheTag } from "next/cache";
 import { publicClient } from "@/lib/supabase/public";
 import { DEFAULT_THEME, TAGS, hasPublicEnv } from "@/lib/config";
 import type {
+  AffiliateLink,
   Article,
   Category,
   LandingContent,
@@ -194,6 +195,18 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
     .eq("published", true)
     .single();
   return (data as Page | null) ?? null;
+}
+
+export async function getAffiliateProducts(): Promise<AffiliateLink[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(TAGS.affiliate);
+  if (!hasPublicEnv) return [];
+  const { data } = await publicClient()
+    .from("affiliate_links")
+    .select("*")
+    .order("created_at", { ascending: false });
+  return (data as AffiliateLink[] | null) ?? [];
 }
 
 export async function getSiteName(): Promise<string> {

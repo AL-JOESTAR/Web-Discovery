@@ -15,6 +15,7 @@ export const TAGS = {
   categories: "categories",
   pages: "pages",
   settings: "site-settings",
+  affiliate: "affiliate",
 } as const;
 
 export const DEFAULT_LANDING: LandingContent = {

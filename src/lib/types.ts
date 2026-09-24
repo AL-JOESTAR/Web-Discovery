@@ -56,6 +56,8 @@ export type AffiliateLink = {
   nama: string;
   url: string;
   kategori: string | null;
+  gambar: string | null;
+  harga: number | null;
   created_at: string;
   updated_at: string;
 };

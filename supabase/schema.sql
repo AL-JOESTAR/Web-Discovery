@@ -91,6 +91,14 @@ create table if not exists public.affiliate_links (
 alter table public.affiliate_links
   add column if not exists kategori text;
 
+-- Gambar & harga produk afiliasi (untuk fitur search product di homepage)
+alter table public.affiliate_links
+  add column if not exists gambar text;
+alter table public.affiliate_links
+  add column if not exists harga numeric;
+
+create index if not exists affiliate_harga_idx on public.affiliate_links(harga);
+
 -- =============================================================
 -- RLS (Row Level Security)
 -- =============================================================
@@ -113,6 +121,10 @@ create policy "public read published pages" on public.pages
   for select to anon, authenticated using (published = true);
 
 create policy "public read site settings" on public.site_settings
+  for select to anon, authenticated using (true);
+
+-- Produk afiliasi ditampilkan di halaman publik (search product)
+create policy "public read affiliate links" on public.affiliate_links
   for select to anon, authenticated using (true);
 
 -- =============================================================

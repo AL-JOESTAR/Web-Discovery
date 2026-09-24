@@ -4,17 +4,20 @@ import {
   getPublishedArticles,
   getCategories,
   getSiteSettings,
+  getAffiliateProducts,
 } from "@/lib/db";
 import { ArticleCard } from "@/components/site/article-card";
 import { SectionHeading } from "@/components/site/section-heading";
 import { Hero } from "@/components/site/hero";
+import { ProductSearch } from "@/components/site/product-search";
 
 export default async function HomePage() {
-  const [landing, articles, categories, settings] = await Promise.all([
+  const [landing, articles, categories, settings, products] = await Promise.all([
     getLandingContent(),
     getPublishedArticles(5),
     getCategories(),
     getSiteSettings(),
+    getAffiliateProducts(),
   ]);
   const site = settings?.site;
   const name = site?.name ?? "Fashion";
@@ -29,6 +32,8 @@ export default async function HomePage() {
         ctaLink={landing.hero.cta_link || "/blog"}
         image={landing.hero.image}
       />
+
+      {products.length > 0 && <ProductSearch products={products} />}
 
       {categories.length > 0 && (
         <section className="border-b border-line bg-surface">
