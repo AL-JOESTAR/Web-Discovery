@@ -117,4 +117,8 @@ export type LandingContent = {
     title: string;
     subtitle: string;
   };
+  shop?: {
+    title: string;
+    description: string;
+  };
 };

@@ -1,29 +1,18 @@
 "use client";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ProductCard } from "@/components/site/product-card";
+import {
+  BUDGET_OPTIONS,
+  SORT_OPTIONS,
+  filterProducts,
+  getKategoriOptions,
+  type BudgetKey,
+  type SortKey,
+} from "@/lib/product-filter";
 import type { AffiliateLink } from "@/lib/types";
 
-type SortKey = "terbaru" | "harga-asc" | "harga-desc" | "nama";
-
-const PAGE_SIZE = 8;
-
-type BudgetKey = "" | "<100k" | "100-250k" | "250-500k" | ">500k";
-
-const BUDGET_RANGES: Record<Exclude<BudgetKey, "">, [number, number | null]> = {
-  "<100k": [0, 100_000],
-  "100-250k": [100_000, 250_000],
-  "250-500k": [250_000, 500_000],
-  ">500k": [500_000, null],
-};
-
-function matchesBudget(harga: number | null, budget: BudgetKey): boolean {
-  if (!budget) return true;
-  if (harga == null || Number.isNaN(harga)) return false;
-  const [min, max] = BUDGET_RANGES[budget];
-  if (harga < min || harga < 0) return false;
-  if (max != null && harga > max) return false;
-  return true;
-}
+export const PAGE_SIZE = 8;
 
 export function ProductSearch({
   products,
@@ -35,61 +24,20 @@ export function ProductSearch({
   const [budget, setBudget] = useState<BudgetKey>("");
   const [sort, setSort] = useState<SortKey>("terbaru");
   const [page, setPage] = useState(1);
-  const [showAll, setShowAll] = useState(false);
 
-  function resetPagination() {
-    setPage(1);
-    setShowAll(false);
-  }
+  const kategoriOptions = useMemo(() => getKategoriOptions(products), [products]);
 
-  const kategoriOptions = useMemo(
-    () =>
-      [...new Set(products.map((p) => p.kategori?.trim()).filter(Boolean))] as string[],
-    [products]
+  const filtered = useMemo(
+    () => filterProducts(products, { query, kategori, budget, sort }),
+    [products, query, kategori, budget, sort]
   );
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    let list = products;
-    if (q) {
-      list = list.filter((p) => p.nama.toLowerCase().includes(q));
-    }
-    if (kategori) {
-      list = list.filter((p) => p.kategori?.trim() === kategori);
-    }
-    if (budget) {
-      list = list.filter((p) => matchesBudget(p.harga, budget));
-    }
-    const sorted = [...list];
-    switch (sort) {
-      case "harga-asc":
-        sorted.sort(
-          (a, b) =>
-            (a.harga ?? Number.POSITIVE_INFINITY) -
-            (b.harga ?? Number.POSITIVE_INFINITY)
-        );
-        break;
-      case "harga-desc":
-        sorted.sort(
-          (a, b) =>
-            (b.harga ?? Number.NEGATIVE_INFINITY) -
-            (a.harga ?? Number.NEGATIVE_INFINITY)
-        );
-        break;
-      case "nama":
-        sorted.sort((a, b) => a.nama.localeCompare(b.nama, "id"));
-        break;
-      default:
-        break;
-    }
-    return sorted;
-  }, [products, query, kategori, budget, sort]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(Math.max(1, page), totalPages);
-  const visible = showAll
-    ? filtered
-    : filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+  const visible = filtered.slice(
+    (safePage - 1) * PAGE_SIZE,
+    safePage * PAGE_SIZE
+  );
 
   return (
     <section className="border-b border-line bg-surface">
@@ -129,7 +77,7 @@ export function ProductSearch({
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
-                resetPagination();
+                setPage(1);
               }}
               placeholder="Cari produk..."
               aria-label="Cari produk"
@@ -142,7 +90,7 @@ export function ProductSearch({
               value={kategori}
               onChange={(e) => {
                 setKategori(e.target.value);
-                resetPagination();
+                setPage(1);
               }}
               aria-label="Filter kategori"
             >
@@ -158,29 +106,30 @@ export function ProductSearch({
               value={budget}
               onChange={(e) => {
                 setBudget(e.target.value as BudgetKey);
-                resetPagination();
+                setPage(1);
               }}
               aria-label="Filter budget"
             >
-              <option value="">Semua Budget</option>
-              <option value="<100k">&lt; 100 rb</option>
-              <option value="100-250k">100 – 250 rb</option>
-              <option value="250-500k">250 – 500 rb</option>
-              <option value=">500k">&gt; 500 rb</option>
+              {BUDGET_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
             </select>
             <select
               className="select"
               value={sort}
               onChange={(e) => {
                 setSort(e.target.value as SortKey);
-                resetPagination();
+                setPage(1);
               }}
               aria-label="Urutkan"
             >
-              <option value="terbaru">Terbaru</option>
-              <option value="harga-asc">Harga: Rendah ke Tinggi</option>
-              <option value="harga-desc">Harga: Tinggi ke Rendah</option>
-              <option value="nama">Nama A–Z</option>
+              {SORT_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -205,7 +154,7 @@ export function ProductSearch({
               ))}
             </div>
 
-            {!showAll && totalPages > 1 && (
+            {totalPages > 1 && (
               <nav className="mt-12 flex items-center justify-center gap-3">
                 <button
                   type="button"
@@ -231,17 +180,11 @@ export function ProductSearch({
               </nav>
             )}
 
-            {filtered.length > PAGE_SIZE && (
-              <div className="mt-6 text-center">
-                <button
-                  type="button"
-                  onClick={() => setShowAll((s) => !s)}
-                  className="btn-ghost"
-                >
-                  {showAll ? "Kembali per Halaman" : "Muat Semua Produk"}
-                </button>
-              </div>
-            )}
+            <div className="mt-6 text-center">
+              <Link href="/shop" className="btn-primary">
+                Muat Semua Produk
+              </Link>
+            </div>
           </>
         )}
       </div>

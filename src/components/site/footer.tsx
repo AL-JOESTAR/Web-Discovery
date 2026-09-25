@@ -70,12 +70,20 @@ export async function Footer() {
           </p>
           <ul className="mt-4 space-y-2.5">
             <li>
-<Link
-                  href="/blog"
-                  className="text-sm text-muted transition-colors hover:text-accent"
-                >
-                  Semua Artikel
-                </Link>
+              <Link
+                href="/blog"
+                className="text-sm text-muted transition-colors hover:text-accent"
+              >
+                Semua Artikel
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/shop"
+                className="text-sm text-muted transition-colors hover:text-accent"
+              >
+                Shop
+              </Link>
             </li>
             {pages.map((page) => (
               <li key={page.id}>

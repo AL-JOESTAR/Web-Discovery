@@ -23,9 +23,10 @@ export function SettingsForm({ initial }: { initial: SiteSettings | null }) {
       socials: {},
     }
   );
-  const [landing, setLanding] = useState<LandingContent>(
-    (settings.landing as LandingContent | undefined) ?? DEFAULT_LANDING
-  );
+  const [landing, setLanding] = useState<LandingContent>({
+    ...DEFAULT_LANDING,
+    ...(settings.landing as LandingContent | undefined),
+  });
   const [theme, setTheme] = useState<ThemeSettings>(
     (settings.theme as ThemeSettings | undefined) ?? { ...DEFAULT_THEME }
   );
@@ -52,6 +53,13 @@ export function SettingsForm({ initial }: { initial: SiteSettings | null }) {
 
   function setAbout(patch: Partial<LandingContent["about"]>) {
     setLanding((prev) => ({ ...prev, about: { ...prev.about, ...patch } }));
+  }
+
+  function setShop(patch: Partial<NonNullable<LandingContent["shop"]>>) {
+    setLanding((prev) => ({
+      ...prev,
+      shop: { title: "", description: "", ...prev.shop, ...patch },
+    }));
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -229,6 +237,30 @@ export function SettingsForm({ initial }: { initial: SiteSettings | null }) {
             />
             <p className="mt-1.5 text-xs text-stone-500">
               Jika kosong, tampil kotak placeholder berisi nama situs.
+            </p>
+          </Field>
+        </div>
+      </Fieldset>
+
+      <Fieldset title="Landing Page — Halaman Shop">
+        <div className="grid gap-4">
+          <Field label="Judul Halaman">
+            <input
+              className="input"
+              value={landing.shop?.title ?? ""}
+              onChange={(e) => setShop({ title: e.target.value })}
+            />
+          </Field>
+          <Field label="Deskripsi">
+            <textarea
+              className="textarea"
+              rows={2}
+              value={landing.shop?.description ?? ""}
+              onChange={(e) => setShop({ description: e.target.value })}
+            />
+            <p className="mt-1.5 text-xs text-stone-500">
+              Dipakai sebagai judul &amp; deskripsi halaman /shop (tombol
+              &quot;Muat Semua Produk&quot; di beranda).
             </p>
           </Field>
         </div>

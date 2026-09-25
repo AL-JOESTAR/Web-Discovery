@@ -55,6 +55,11 @@ export const DEFAULT_LANDING: LandingContent = {
     title: "Berlangganan Newsletter",
     subtitle: "Dapatkan tips fashion terbaru langsung di email kamu.",
   },
+  shop: {
+    title: "Semua Produk",
+    description:
+      "Temukan semua produk fashion pilihan kami dalam satu tempat.",
+  },
 };
 
 export const hasPublicEnv =

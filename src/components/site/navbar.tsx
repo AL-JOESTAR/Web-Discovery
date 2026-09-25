@@ -11,6 +11,7 @@ export async function Navbar() {
   const name = site?.name ?? "Fashion";
   const links = [
     { href: "/blog", label: "Blog" },
+    { href: "/shop", label: "Shop" },
     ...categories.slice(0, 5).map((category) => ({
       href: `/kategori/${category.slug}`,
       label: category.name,
