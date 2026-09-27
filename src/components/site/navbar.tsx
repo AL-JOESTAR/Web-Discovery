@@ -1,22 +1,10 @@
 import Link from "next/link";
-import { getCategories, getSiteSettings } from "@/lib/db";
-import { MobileNav } from "@/components/site/mobile-nav";
+import { getSiteSettings } from "@/lib/db";
 
 export async function Navbar() {
-  const [settings, categories] = await Promise.all([
-    getSiteSettings(),
-    getCategories(),
-  ]);
+  const settings = await getSiteSettings();
   const site = settings?.site;
   const name = site?.name ?? "Fashion";
-  const links = [
-    { href: "/blog", label: "Blog" },
-    { href: "/shop", label: "Shop" },
-    ...categories.slice(0, 5).map((category) => ({
-      href: `/kategori/${category.slug}`,
-      label: category.name,
-    })),
-  ];
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-background">
@@ -36,19 +24,24 @@ export async function Navbar() {
           )}
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-muted transition-colors hover:text-accent"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <MobileNav name={name} logoUrl={site?.logo_url} links={links} />
+        <Link href="/shop" className="btn-shop">
+          Belanja Sekarang
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </Link>
       </div>
     </header>
   );

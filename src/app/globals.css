@@ -79,6 +79,10 @@
     @apply inline-flex items-center justify-center rounded-full border border-white/35 px-6 py-3 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50;
   }
 
+  .btn-shop {
+    @apply inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-accent to-amber-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-accent/30 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2;
+  }
+
   .input,
   .textarea,
   .select {
