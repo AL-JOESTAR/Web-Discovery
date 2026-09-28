@@ -83,6 +83,9 @@ create table if not exists public.affiliate_links (
   nama text not null,
   url text not null,
   kategori text,
+  marketplace text,
+  rating numeric(2,1) check (rating >= 0 and rating <= 5),
+  rating_count integer check (rating_count >= 0),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -96,6 +99,15 @@ alter table public.affiliate_links
   add column if not exists gambar text;
 alter table public.affiliate_links
   add column if not exists harga numeric;
+
+-- Marketplace & rating (badge + bintang di product card).
+-- Diisi manual lewat admin; marketplace boleh kosong lalu dideteksi dari URL.
+alter table public.affiliate_links
+  add column if not exists marketplace text;
+alter table public.affiliate_links
+  add column if not exists rating numeric(2,1) check (rating >= 0 and rating <= 5);
+alter table public.affiliate_links
+  add column if not exists rating_count integer check (rating_count >= 0);
 
 create index if not exists affiliate_harga_idx on public.affiliate_links(harga);
 

@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { adminClient } from "@/lib/supabase/admin";
 import { TAGS } from "@/lib/config";
 import { slugify } from "@/lib/utils";
+import { detectMarketplace, isMarketplace } from "@/lib/marketplace";
 
 async function requireAdmin() {
   const supabase = await createClient();
@@ -472,6 +473,31 @@ function parseHarga(raw: FormDataEntryValue | null): number | null | -1 {
   if (!Number.isFinite(num) || num < 0) return -1;
   return Math.round(num * 100) / 100;
 }
+
+function parseRating(raw: FormDataEntryValue | null): number | null | -1 {
+  const value = String(raw ?? "").trim();
+  if (!value) return null;
+  const num = Number(value.replace(",", "."));
+  if (!Number.isFinite(num) || num < 0 || num > 5) return -1;
+  return Math.round(num * 10) / 10;
+}
+
+function parseRatingCount(raw: FormDataEntryValue | null): number | null | -1 {
+  const value = String(raw ?? "").trim();
+  if (!value) return null;
+  const num = Number(value);
+  if (!Number.isFinite(num) || num < 0) return -1;
+  return Math.floor(num);
+}
+
+function parseMarketplace(
+  raw: FormDataEntryValue | null,
+  url: string
+): string | null {
+  const value = String(raw ?? "").trim();
+  if (value && isMarketplace(value)) return value;
+  return detectMarketplace(url);
+}
 const ARTICLE_TEMPLATES = ["classic", "hero", "magazine"] as const;
 type ArticleTemplate = (typeof ARTICLE_TEMPLATES)[number];
 
@@ -509,6 +535,8 @@ export async function createAffiliateLink(
   const kategori = String(formData.get("kategori") || "").trim() || null;
   const gambar = String(formData.get("gambar") || "").trim() || null;
   const harga = parseHarga(formData.get("harga"));
+  const rating = parseRating(formData.get("rating"));
+  const ratingCount = parseRatingCount(formData.get("rating_count"));
 
   if (!nama) return { ok: false, error: "Nama harus diisi." };
   if (!URL_RE.test(url)) {
@@ -520,10 +548,25 @@ export async function createAffiliateLink(
   if (harga === -1) {
     return { ok: false, error: "Harga tidak valid. Gunakan angka 0 atau lebih." };
   }
+  if (rating === -1) {
+    return { ok: false, error: "Rating tidak valid. Gunakan angka 0 sampai 5." };
+  }
+  if (ratingCount === -1) {
+    return { ok: false, error: "Jumlah ulasan tidak valid. Gunakan angka 0 atau lebih." };
+  }
 
   const { data, error } = await adminClient()
     .from("affiliate_links")
-    .insert({ nama, url, kategori, gambar, harga })
+    .insert({
+      nama,
+      url,
+      kategori,
+      gambar,
+      harga,
+      marketplace: parseMarketplace(formData.get("marketplace"), url),
+      rating,
+      rating_count: ratingCount,
+    })
     .select("id, nama")
     .single();
   if (error) return { ok: false, error: "Gagal menyimpan link afiliasi." };
@@ -546,6 +589,8 @@ export async function updateAffiliateLink(
   const kategori = String(formData.get("kategori") || "").trim() || null;
   const gambar = String(formData.get("gambar") || "").trim() || null;
   const harga = parseHarga(formData.get("harga"));
+  const rating = parseRating(formData.get("rating"));
+  const ratingCount = parseRatingCount(formData.get("rating_count"));
 
   if (!id || !nama) return { ok: false, error: "Data tidak lengkap." };
   if (!URL_RE.test(url)) {
@@ -557,6 +602,12 @@ export async function updateAffiliateLink(
   if (harga === -1) {
     return { ok: false, error: "Harga tidak valid. Gunakan angka 0 atau lebih." };
   }
+  if (rating === -1) {
+    return { ok: false, error: "Rating tidak valid. Gunakan angka 0 sampai 5." };
+  }
+  if (ratingCount === -1) {
+    return { ok: false, error: "Jumlah ulasan tidak valid. Gunakan angka 0 atau lebih." };
+  }
 
   const { error } = await adminClient()
     .from("affiliate_links")
@@ -566,6 +617,9 @@ export async function updateAffiliateLink(
       kategori,
       gambar,
       harga,
+      marketplace: parseMarketplace(formData.get("marketplace"), url),
+      rating,
+      rating_count: ratingCount,
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);

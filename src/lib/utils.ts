@@ -26,6 +26,25 @@ export function formatPrice(harga: number | null): string {
   }).format(harga);
 }
 
+export function formatCount(value: number | null): string {
+  if (value == null || Number.isNaN(value) || value <= 0) return "";
+
+  const units: [number, string][] = [
+    [1_000_000, "jt"],
+    [1000, "rb"],
+  ];
+  for (const [divisor, suffix] of units) {
+    if (value < divisor) continue;
+    const scaled = value / divisor;
+    // Di bawah 10 pertahankan satu desimal, di atasnya bulatkan agar ringkas.
+    const text = new Intl.NumberFormat("id-ID", {
+      maximumFractionDigits: scaled < 10 ? 1 : 0,
+    }).format(scaled);
+    return `${text}${suffix}`;
+  }
+  return new Intl.NumberFormat("id-ID").format(value);
+}
+
 export function formatDate(date: string | null): string {
   if (!date) return "";
   return new Intl.DateTimeFormat("id-ID", {

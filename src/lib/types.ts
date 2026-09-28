@@ -58,6 +58,9 @@ export type AffiliateLink = {
   kategori: string | null;
   gambar: string | null;
   harga: number | null;
+  marketplace: string | null;
+  rating: number | null;
+  rating_count: number | null;
   created_at: string;
   updated_at: string;
 };

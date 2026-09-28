@@ -2,7 +2,10 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { DeleteButton } from "@/components/admin/delete-button";
-import { formatPrice } from "@/lib/utils";
+import { MarketplaceBadge } from "@/components/marketplace-badge";
+import { StarRow } from "@/components/star-rating";
+import { formatCount, formatPrice } from "@/lib/utils";
+import { getMarketplaceLabel, isMarketplace } from "@/lib/marketplace";
 import type { AffiliateLink } from "@/lib/types";
 
 export function AffiliateTable({
@@ -59,6 +62,9 @@ export function AffiliateTable({
                 <th className="px-4 py-3 font-medium text-stone-500">
                   Kategori
                 </th>
+                <th className="px-4 py-3 font-medium text-stone-500">
+                  Marketplace
+                </th>
                 <th className="hidden px-4 py-3 font-medium text-stone-500 sm:table-cell">
                   URL
                 </th>
@@ -68,65 +74,110 @@ export function AffiliateTable({
               </tr>
             </thead>
             <tbody>
-              {filtered.map((link) => (
-                <tr
-                  key={link.id}
-                  className="border-b border-stone-100 last:border-0"
-                >
-                  <td className="px-4 py-3">
-                    {link.gambar ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={link.gambar}
-                        alt={link.nama}
-                        className="h-10 w-12 rounded-md border border-stone-200 object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-10 w-12 items-center justify-center rounded-md bg-stone-100 font-serif text-sm text-stone-400">
-                        {link.nama.charAt(0).toUpperCase()}
+              {filtered.map((link) => {
+                const marketplaceLabel = getMarketplaceLabel(
+                  link.marketplace,
+                  link.url
+                );
+                const marketplaceIsAuto =
+                  marketplaceLabel != null &&
+                  !isMarketplace((link.marketplace ?? "").trim());
+                const reviews = formatCount(link.rating_count);
+                return (
+                  <tr
+                    key={link.id}
+                    className="border-b border-stone-100 last:border-0"
+                  >
+                    <td className="px-4 py-3">
+                      {link.gambar ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={link.gambar}
+                          alt={link.nama}
+                          className="h-10 w-12 rounded-md border border-stone-200 object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-10 w-12 items-center justify-center rounded-md bg-stone-100 font-serif text-sm text-stone-400">
+                          {link.nama.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="font-medium text-stone-900">
+                        {link.nama}
                       </div>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 font-medium text-stone-900">
-                    {link.nama}
-                  </td>
-                  <td className="px-4 py-3 text-stone-700">
-                    {formatPrice(link.harga) || (
-                      <span className="text-xs text-stone-300">-</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">
-                    {link.kategori ? (
-                      <span className="rounded-full bg-stone-100 px-2.5 py-0.5 text-xs font-medium text-stone-600">
-                        {link.kategori}
-                      </span>
-                    ) : (
-                      <span className="text-xs text-stone-300">-</span>
-                    )}
-                  </td>
-                  <td className="hidden max-w-md truncate px-4 py-3 text-stone-500 sm:table-cell">
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-accent hover:underline"
-                    >
-                      {link.url}
-                    </a>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center justify-end gap-3">
-                      <Link
-                        href={`/admin/affiliate/${link.id}`}
-                        className="text-xs font-medium text-accent hover:underline"
+                      {link.rating != null && link.rating > 0 && (
+                        <div className="mt-1 flex items-center gap-1.5">
+                          <StarRow rating={Number(link.rating)} size={12} />
+                          <span className="text-xs font-medium text-stone-700">
+                            {Number(link.rating).toFixed(1)}
+                          </span>
+                          {reviews && (
+                            <span className="text-xs text-stone-400">
+                              ({reviews} ulasan)
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-stone-700">
+                      {formatPrice(link.harga) || (
+                        <span className="text-xs text-stone-300">-</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      {link.kategori ? (
+                        <span className="rounded-full bg-stone-100 px-2.5 py-0.5 text-xs font-medium text-stone-600">
+                          {link.kategori}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-stone-300">-</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      {marketplaceLabel ? (
+                        <span className="flex flex-wrap items-center gap-1.5">
+                          <MarketplaceBadge
+                            label={marketplaceLabel}
+                            variant="chip"
+                          />
+                          {marketplaceIsAuto && (
+                            <span
+                              className="text-[10px] uppercase tracking-wide text-stone-400"
+                              title="Deteksi dari URL, belum dipilih manual"
+                            >
+                              auto
+                            </span>
+                          )}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-stone-300">-</span>
+                      )}
+                    </td>
+                    <td className="hidden max-w-md truncate px-4 py-3 text-stone-500 sm:table-cell">
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-accent hover:underline"
                       >
-                        Edit
-                      </Link>
-                      <DeleteButton id={link.id} kind="affiliate" />
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        {link.url}
+                      </a>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-end gap-3">
+                        <Link
+                          href={`/admin/affiliate/${link.id}`}
+                          className="text-xs font-medium text-accent hover:underline"
+                        >
+                          Edit
+                        </Link>
+                        <DeleteButton id={link.id} kind="affiliate" />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
