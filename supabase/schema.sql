@@ -45,6 +45,9 @@ alter table public.articles
   add column if not exists gallery jsonb not null default '[]'::jsonb;
 alter table public.articles
   add column if not exists focus_keyphrase text;
+-- Gambar ilustrasi per-section (dipetakan per H2) untuk artikel.
+alter table public.articles
+  add column if not exists section_images jsonb not null default '[]'::jsonb;
 
 create index if not exists articles_slug_idx on public.articles(slug);
 create index if not exists articles_status_idx on public.articles(status);

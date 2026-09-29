@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Article, GalleryImage } from "@/lib/types";
 import { formatDate, readingTime } from "@/lib/utils";
+import { insertSectionImages } from "@/lib/article-sections";
 
 function CategoryBadge({
   article,
@@ -38,7 +39,9 @@ function ArticleContent({ article }: { article: Article }) {
   return (
     <div
       className="tiptap-content"
-      dangerouslySetInnerHTML={{ __html: article.content_html || "" }}
+      dangerouslySetInnerHTML={{
+        __html: insertSectionImages(article.content_html ?? "", article.section_images),
+      }}
     />
   );
 }

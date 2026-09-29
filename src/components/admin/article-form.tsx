@@ -6,8 +6,15 @@ import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { SeoPanel } from "@/components/admin/seo-panel";
 import { SerpPreview } from "@/components/admin/serp-preview";
 import { TagInput } from "@/components/admin/tag-input";
+import { SectionImagesInput } from "@/components/admin/section-images-input";
 import { slugify } from "@/lib/utils";
-import type { Article, ArticleTemplate, Category, GalleryImage } from "@/lib/types";
+import type {
+  Article,
+  ArticleTemplate,
+  Category,
+  GalleryImage,
+  ArticleSectionImage,
+} from "@/lib/types";
 
 const emptyState: ActionState = { ok: false };
 
@@ -57,6 +64,9 @@ export function ArticleForm({
     article?.template ?? "classic"
   );
   const [gallery, setGallery] = useState<GalleryImage[]>(article?.gallery ?? []);
+  const [sectionImages, setSectionImages] = useState<ArticleSectionImage[]>(
+    article?.section_images ?? []
+  );
   const [status, setStatus] = useState<"draft" | "published">(
     article?.status ?? "draft"
   );
@@ -104,6 +114,7 @@ export function ArticleForm({
     fd.set("content_json", contentJson);
     fd.set("template", template);
     fd.set("gallery", JSON.stringify(gallery));
+    fd.set("section_images", JSON.stringify(sectionImages));
     if (article) fd.set("id", article.id);
 
     startTransition(async () => {
@@ -204,6 +215,16 @@ export function ArticleForm({
               onChangeJson={setContentJson}
               focusKeyword={focusKeyword}
             />
+            <div className="border-t border-stone-100 p-5">
+              <h3 className="mb-3 text-sm font-semibold text-stone-900">
+                Gambar per Bagian (setiap H2)
+              </h3>
+              <SectionImagesInput
+                contentHtml={contentHtml}
+                value={sectionImages}
+                onChange={setSectionImages}
+              />
+            </div>
           </div>
         </div>
 

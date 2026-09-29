@@ -37,6 +37,10 @@ export async function generateMetadata({
   const title = article.seo_title || article.title;
   const description =
     article.seo_description || article.excerpt || site?.description || "";
+  const images = [
+    article.cover_image,
+    ...(article.section_images ?? []).map((s) => s.url),
+  ].filter((v): v is string => !!v);
   return {
     title,
     description,
@@ -50,13 +54,13 @@ export async function generateMetadata({
       siteName: site?.name || "Fashion Blog",
       publishedTime: article.published_at || article.created_at,
       modifiedTime: article.updated_at,
-      images: article.cover_image ? [{ url: article.cover_image }] : undefined,
+      images: images.length > 0 ? images.map((i) => ({ url: i })) : undefined,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: article.cover_image ? [article.cover_image] : undefined,
+      images: images.length > 0 ? [images[0]] : undefined,
     },
   };
 }

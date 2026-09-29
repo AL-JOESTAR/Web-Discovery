@@ -16,6 +16,14 @@ export type GalleryImage = {
   alt?: string;
 };
 
+export type ArticleSectionImage = {
+  index: number;
+  heading?: string;
+  url: string;
+  alt?: string;
+  caption?: string;
+};
+
 export type Article = {
   id: string;
   category_id: string | null;
@@ -33,6 +41,7 @@ export type Article = {
   focus_keyphrase: string | null;
   template: ArticleTemplate;
   gallery: GalleryImage[];
+  section_images: ArticleSectionImage[];
   published_at: string | null;
   created_at: string;
   updated_at: string;

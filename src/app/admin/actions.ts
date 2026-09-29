@@ -62,6 +62,9 @@ export async function createArticle(
     String(formData.get("template") || "classic")
   );
   const gallery = parseGallery(String(formData.get("gallery") || ""));
+  const section_images = parseSectionImages(
+    String(formData.get("section_images") || "")
+  );
 
   if (!title) return { ok: false, error: "Judul harus diisi." };
 
@@ -88,6 +91,7 @@ export async function createArticle(
       focus_keyphrase,
       template,
       gallery,
+      section_images,
       published_at,
     })
     .select("id, slug")
@@ -134,6 +138,9 @@ export async function updateArticle(
     String(formData.get("template") || "classic")
   );
   const gallery = parseGallery(String(formData.get("gallery") || ""));
+  const section_images = parseSectionImages(
+    String(formData.get("section_images") || "")
+  );
 
   if (!id || !title) return { ok: false, error: "Data tidak lengkap." };
 
@@ -167,6 +174,7 @@ export async function updateArticle(
     focus_keyphrase,
     template,
     gallery,
+    section_images,
     updated_at: new Date().toISOString(),
   };
   if (published_at) updateData.published_at = published_at;
@@ -523,6 +531,47 @@ function parseGallery(raw: string): { url: string; alt?: string }[] {
       typeof (item as { url?: unknown }).url === "string" &&
       URL_RE.test((item as { url: string }).url)
   );
+}
+
+function parseSectionImages(
+  raw: string
+): { index: number; heading?: string; url: string; alt?: string; caption?: string }[] {
+  if (!raw.trim()) return [];
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return [];
+  }
+  if (!Array.isArray(parsed)) return [];
+  return parsed.flatMap((item) => {
+    if (
+      !item ||
+      typeof item !== "object" ||
+      typeof (item as { url?: unknown }).url !== "string" ||
+      !URL_RE.test((item as { url: string }).url)
+    )
+      return [];
+    const obj = item as {
+      index?: unknown;
+      heading?: unknown;
+      url: string;
+      alt?: unknown;
+      caption?: unknown;
+    };
+    const index = Number(obj.index);
+    return [
+      {
+        index: Number.isInteger(index) && index >= 0 ? index : 0,
+        heading:
+          typeof obj.heading === "string" ? obj.heading.slice(0, 300) : undefined,
+        url: obj.url,
+        alt: typeof obj.alt === "string" ? obj.alt.slice(0, 500) : undefined,
+        caption:
+          typeof obj.caption === "string" ? obj.caption.slice(0, 500) : undefined,
+      },
+    ];
+  });
 }
 
 export async function createAffiliateLink(

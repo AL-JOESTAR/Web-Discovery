@@ -132,6 +132,32 @@
   @apply my-6 h-auto w-full rounded-xl;
 }
 
+.tiptap-content figure.article-figure {
+  @apply my-6 w-full;
+}
+
+@media (min-width: 768px) {
+  .tiptap-content figure.article-figure[data-align="left"] {
+    float: left;
+    width: min(320px, 45%);
+    margin: 0.3rem 1.5rem 0.5rem 0;
+  }
+
+  .tiptap-content figure.article-figure[data-align="right"] {
+    float: right;
+    width: min(320px, 45%);
+    margin: 0.3rem 0 0.5rem 1.5rem;
+  }
+}
+
+.tiptap-content figure.article-figure img {
+  @apply h-auto w-full rounded-2xl object-cover shadow-sm shadow-stone-900/10;
+}
+
+.tiptap-content figure.article-figure figcaption {
+  @apply mt-2 text-sm italic text-stone-500;
+}
+
 .tiptap-content img.ProseMirror-selectednode {
   @apply ring-2 ring-accent;
 }

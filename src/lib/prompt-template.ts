@@ -320,11 +320,22 @@ FORMAT HTML
 
 BLOK 2 harus berupa fragmen HTML siap ditempel ke editor WYSIWYG.
 Tag yang diperbolehkan: h2, h3, p, ul, ol, li, table, thead, tbody, tr, th, td, strong, em, i, b, a.
-Jangan menggunakan: html, head, body, h1, div, span, section, article, hr, script, style, meta, link.
+Jangan menggunakan: html, head, body, h1, div, span, section, article, hr, script, style, meta, link, img.
 Jangan menggunakan atribut class, id, atau style.
 Jangan menggunakan Markdown.
 Jangan menggunakan format seperti [h2] atau [/h2].
 Judul artikel hanya berada di BLOK 1.
+
+GAMBAR PER BAGIAN
+
+Gambar tidak boleh dimasukkan ke dalam HTML.
+Gambar untuk tiap bagian akan ditambahkan oleh pengguna melalui panel "Gambar per Bagian" di halaman admin setelah artikel disisipkan ke editor.
+Agar panel tersebut mudah diisi, pastikan:
+- setiap H2 adalah judul singkat, deskriptif, dan unik dalam satu artikel
+- struktur H2 rapi, tidak ada H2 yang kosong atau berisi kalimat panjang
+- pembahasan setiap H2 jelas sehingga gambar ilustrasi yang sesuai mudah dipilih
+
+Tambahkan BLOK 3 berisi saran gambar untuk setiap bagian (H2) agar pengguna tinggal mencari visualnya di situs stok foto. Saran harus deskriptif dan spesifik tentang subjek, sudut, gaya, suasana, dan konteks bagian tersebut. Jangan menyebut nama spidol air (watermark) atau layanan tertentu.
 
 KARAKTER
 
@@ -366,7 +377,7 @@ Sebelum menghasilkan artikel, periksa secara internal:
 
 OUTPUT
 
-Hanya keluarkan dua blok berikut:
+Hanya keluarkan tiga blok berikut, tanpa komentar tambahan:
 
 BLOK 1 - META SEO
 
@@ -378,4 +389,11 @@ BLOK 2 - KONTEN ARTIKEL
 
 [fragmen HTML artikel]
 
-Jangan memberikan penjelasan, catatan, komentar, atau teks tambahan di luar kedua blok tersebut.`;
+BLOK 3 - SARAN GAMBAR PER BAGIAN
+
+[daftar sesuai urutan H2 di BLOK 2, format:
+Bagian 1 - "<judul H2>": deskripsi visual yang direkomendasikan
+Bagian 2 - "<judul H2>": deskripsi visual yang direkomendasikan
+dst.]
+
+Jangan memberikan penjelasan, catatan, komentar, atau teks tambahan di luar ketiga blok tersebut.`;

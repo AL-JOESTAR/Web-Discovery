@@ -51,12 +51,16 @@ export function articleJsonLd(
     "@type": "Organization",
     name: siteName,
   };
+  const images = [
+    article.cover_image,
+    ...(article.section_images ?? []).map((s) => s.url).filter(Boolean),
+  ].filter((v): v is string => !!v);
   return {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: article.seo_title || article.title,
     description: article.seo_description || article.excerpt,
-    image: article.cover_image ? [article.cover_image] : undefined,
+    image: images.length ? images : undefined,
     datePublished: article.published_at || article.created_at,
     dateModified: article.updated_at,
     author,
