@@ -1,6 +1,11 @@
 import type { AffiliateLink } from "@/lib/types";
+import {
+  NO_MARKETPLACE,
+  getMarketplaceLabel,
+  type MarketplaceKey,
+} from "@/lib/marketplace";
 
-export type SortKey = "terbaru" | "harga-asc" | "harga-desc" | "nama";
+export type SortKey = "" | "harga-asc" | "harga-desc" | "nama";
 
 export type BudgetKey = "" | "<100k" | "100-250k" | "250-500k" | ">500k";
 
@@ -15,7 +20,7 @@ export const BUDGET_RANGES: Record<
 };
 
 export const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: "terbaru", label: "Terbaru" },
+  { value: "", label: "Tanpa pengurutan" },
   { value: "harga-asc", label: "Harga: Rendah ke Tinggi" },
   { value: "harga-desc", label: "Harga: Tinggi ke Rendah" },
   { value: "nama", label: "Nama A–Z" },
@@ -44,16 +49,35 @@ export function getKategoriOptions(products: AffiliateLink[]): string[] {
   ] as string[];
 }
 
+export function getMarketplaceOptions(
+  products: AffiliateLink[]
+): MarketplaceKey[] {
+  const labels = new Set<string>();
+  let hasNone = false;
+  for (const p of products) {
+    const label = getMarketplaceLabel(p.marketplace, p.url);
+    if (label) labels.add(label);
+    else hasNone = true;
+  }
+  const options = [...labels].sort((a, b) =>
+    a.localeCompare(b, "id")
+  ) as MarketplaceKey[];
+  if (hasNone) options.push(NO_MARKETPLACE);
+  return options;
+}
+
 export function filterProducts(
   products: AffiliateLink[],
   {
     query,
     kategori,
+    marketplace,
     budget,
     sort,
   }: {
     query: string;
     kategori: string;
+    marketplace: MarketplaceKey;
     budget: BudgetKey;
     sort: SortKey;
   }
@@ -65,6 +89,14 @@ export function filterProducts(
   }
   if (kategori) {
     list = list.filter((p) => p.kategori?.trim() === kategori);
+  }
+  if (marketplace) {
+    // Pakai helper yang sama dengan ProductCard supaya hasil filter
+    // konsisten dengan badge yang tampil di kartu.
+    list = list.filter((p) => {
+      const label = getMarketplaceLabel(p.marketplace, p.url);
+      return marketplace === NO_MARKETPLACE ? label == null : label === marketplace;
+    });
   }
   if (budget) {
     list = list.filter((p) => matchesBudget(p.harga, budget));

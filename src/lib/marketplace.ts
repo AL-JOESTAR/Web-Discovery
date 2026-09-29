@@ -10,6 +10,30 @@ export const MARKETPLACES = [
 
 export type Marketplace = (typeof MARKETPLACES)[number];
 
+/** Sentinel untuk produk yang marketplace-nya tidak terdeteksi.
+ *  Tidak akan bentrok dengan label brand, yang selalu dari daftar di atas. */
+export const NO_MARKETPLACE = "__none__";
+
+export type MarketplaceKey = "" | Marketplace | typeof NO_MARKETPLACE;
+
+/** Warna badge per marketplace.
+ *  Peta ini sengaja memakai string literal: Tailwind v4 memindai sumber
+ *  untuk nama kelas, jadi kelas yang dirakit dinamis tidak akan ter-generate.
+ *  Tipenya Record<Marketplace, ...> supaya menambah marketplace baru di
+ *  MARKETPLACES langsung jadi error TypeScript sampai warnanya diisi. */
+export const MARKETPLACE_STYLES: Record<
+  Marketplace,
+  { bg: string; text: string }
+> = {
+  Shopee: { bg: "bg-brand-shopee", text: "text-brand-ink" },
+  Tokopedia: { bg: "bg-brand-tokopedia", text: "text-brand-ink" },
+  "TikTok Shop": { bg: "bg-brand-tiktok", text: "text-brand-ink" },
+  Lazada: { bg: "bg-brand-lazada", text: "text-white" },
+  Blibli: { bg: "bg-brand-blibli", text: "text-brand-ink" },
+  Zalora: { bg: "bg-brand-zalora", text: "text-white" },
+  Amazon: { bg: "bg-brand-amazon", text: "text-brand-ink" },
+};
+
 export function isMarketplace(value: string): value is Marketplace {
   return (MARKETPLACES as readonly string[]).includes(value);
 }

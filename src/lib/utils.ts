@@ -26,7 +26,7 @@ export function formatPrice(harga: number | null): string {
   }).format(harga);
 }
 
-export function formatCount(value: number | null): string {
+export function formatCount(value: number | null | undefined): string {
   if (value == null || Number.isNaN(value) || value <= 0) return "";
 
   const units: [number, string][] = [

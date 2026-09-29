@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import type { Marketplace } from "@/lib/marketplace";
+import { MARKETPLACE_STYLES, type Marketplace } from "@/lib/marketplace";
 
 export function MarketplaceBadge({
   label,
@@ -10,11 +10,15 @@ export function MarketplaceBadge({
   variant?: "overlay" | "chip";
   className?: string;
 }) {
+  const style = MARKETPLACE_STYLES[label];
+
   if (variant === "chip") {
     return (
       <span
         className={cn(
-          "inline-flex items-center rounded-full bg-stone-100 px-2.5 py-0.5 text-xs font-medium text-stone-600",
+          "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+          style.bg,
+          style.text,
           className
         )}
       >
@@ -26,7 +30,9 @@ export function MarketplaceBadge({
   return (
     <span
       className={cn(
-        "absolute left-3 top-3 inline-flex items-center rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-stone-800 shadow-sm backdrop-blur-sm transition-colors group-hover:bg-accent group-hover:text-white",
+        "absolute left-3 top-3 inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide shadow-sm transition-[filter] group-hover:brightness-95",
+        style.bg,
+        style.text,
         className
       )}
     >

@@ -3,8 +3,8 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { DeleteButton } from "@/components/admin/delete-button";
 import { MarketplaceBadge } from "@/components/marketplace-badge";
-import { StarRow } from "@/components/star-rating";
-import { formatCount, formatPrice } from "@/lib/utils";
+import { RatingInline } from "@/components/rating-inline";
+import { formatPrice } from "@/lib/utils";
 import { getMarketplaceLabel, isMarketplace } from "@/lib/marketplace";
 import type { AffiliateLink } from "@/lib/types";
 
@@ -82,7 +82,7 @@ export function AffiliateTable({
                 const marketplaceIsAuto =
                   marketplaceLabel != null &&
                   !isMarketplace((link.marketplace ?? "").trim());
-                const reviews = formatCount(link.rating_count);
+
                 return (
                   <tr
                     key={link.id}
@@ -107,17 +107,12 @@ export function AffiliateTable({
                         {link.nama}
                       </div>
                       {link.rating != null && link.rating > 0 && (
-                        <div className="mt-1 flex items-center gap-1.5">
-                          <StarRow rating={Number(link.rating)} size={12} />
-                          <span className="text-xs font-medium text-stone-700">
-                            {Number(link.rating).toFixed(1)}
-                          </span>
-                          {reviews && (
-                            <span className="text-xs text-stone-400">
-                              ({reviews} ulasan)
-                            </span>
-                          )}
-                        </div>
+                        <RatingInline
+                          rating={Number(link.rating)}
+                          reviewCount={link.rating_count}
+                          size={12}
+                          className="mt-1"
+                        />
                       )}
                     </td>
                     <td className="px-4 py-3 text-stone-700">

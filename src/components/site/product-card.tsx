@@ -1,14 +1,13 @@
 import { MarketplaceBadge } from "@/components/marketplace-badge";
-import { StarRow } from "@/components/star-rating";
+import { RatingInline } from "@/components/rating-inline";
 import { getMarketplaceLabel } from "@/lib/marketplace";
-import { formatCount, formatPrice } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 import type { AffiliateLink } from "@/lib/types";
 
 export function ProductCard({ product }: { product: AffiliateLink }) {
   const marketplace = getMarketplaceLabel(product.marketplace, product.url);
   const rating = product.rating != null ? Number(product.rating) : null;
   const hasRating = rating != null && !Number.isNaN(rating) && rating > 0;
-  const reviews = hasRating ? formatCount(product.rating_count) : "";
 
   return (
     <a
@@ -44,17 +43,11 @@ export function ProductCard({ product }: { product: AffiliateLink }) {
           {product.nama}
         </h3>
         {hasRating && (
-          <div className="mt-2 flex items-center gap-1.5">
-            <StarRow rating={rating} />
-            <span className="text-xs font-semibold text-foreground">
-              {rating.toFixed(1)}
-            </span>
-            {reviews && (
-              <span className="text-xs text-stone-400">
-                ({reviews} ulasan)
-              </span>
-            )}
-          </div>
+          <RatingInline
+            rating={rating}
+            reviewCount={product.rating_count}
+            className="mt-2"
+          />
         )}
         <div className="mt-auto flex items-center justify-between gap-2 pt-4">
           {product.harga != null ? (

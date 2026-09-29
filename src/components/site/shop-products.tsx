@@ -6,9 +6,11 @@ import {
   SORT_OPTIONS,
   filterProducts,
   getKategoriOptions,
+  getMarketplaceOptions,
   type BudgetKey,
   type SortKey,
 } from "@/lib/product-filter";
+import { NO_MARKETPLACE, type MarketplaceKey } from "@/lib/marketplace";
 import type { AffiliateLink } from "@/lib/types";
 
 const PAGE_SIZE = 12;
@@ -16,15 +18,20 @@ const PAGE_SIZE = 12;
 export function ShopProducts({ products }: { products: AffiliateLink[] }) {
   const [query, setQuery] = useState("");
   const [kategori, setKategori] = useState("");
+  const [marketplace, setMarketplace] = useState<MarketplaceKey>("");
   const [budget, setBudget] = useState<BudgetKey>("");
-  const [sort, setSort] = useState<SortKey>("terbaru");
+  const [sort, setSort] = useState<SortKey>("");
   const [page, setPage] = useState(1);
 
   const kategoriOptions = useMemo(() => getKategoriOptions(products), [products]);
+  const marketplaceOptions = useMemo(
+    () => getMarketplaceOptions(products),
+    [products]
+  );
 
   const filtered = useMemo(
-    () => filterProducts(products, { query, kategori, budget, sort }),
-    [products, query, kategori, budget, sort]
+    () => filterProducts(products, { query, kategori, marketplace, budget, sort }),
+    [products, query, kategori, marketplace, budget, sort]
   );
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -66,7 +73,7 @@ export function ShopProducts({ products }: { products: AffiliateLink[] }) {
             className="input w-full pl-11"
           />
         </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:flex lg:flex-none">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:flex lg:flex-none">
           <select
             className="select"
             value={kategori}
@@ -80,6 +87,22 @@ export function ShopProducts({ products }: { products: AffiliateLink[] }) {
             {kategoriOptions.map((k) => (
               <option key={k} value={k}>
                 {k}
+              </option>
+            ))}
+          </select>
+          <select
+            className="select"
+            value={marketplace}
+            onChange={(e) => {
+              setMarketplace(e.target.value as MarketplaceKey);
+              setPage(1);
+            }}
+            aria-label="Filter marketplace"
+          >
+            <option value="">Semua marketplace</option>
+            {marketplaceOptions.map((m) => (
+              <option key={m} value={m}>
+                {m === NO_MARKETPLACE ? "Tanpa marketplace" : m}
               </option>
             ))}
           </select>

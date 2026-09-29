@@ -13,6 +13,20 @@
   --font-serif: var(--font-serif);
 }
 
+/* Warna brand marketplace untuk badge.
+   Hex asli tiap brand, tidak dimodifikasi. Warna teksnya per-brand
+   (lihat MARKETPLACE_STYLES) supaya semua lolos WCAG AA di atas foto. */
+@theme {
+  --color-brand-shopee: #ee4d2d;
+  --color-brand-tokopedia: #03ac0e;
+  --color-brand-tiktok: #fe2c55;
+  --color-brand-lazada: #0f146d;
+  --color-brand-blibli: #00a9bc;
+  --color-brand-zalora: #18181b;
+  --color-brand-amazon: #ff9900;
+  --color-brand-ink: #0c0a09;
+}
+
 :root {
   --background: #faf9f7;
   --foreground: #1c1917;
