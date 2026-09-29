@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getAffiliateProducts, getLandingContent, getSiteSettings } from "@/lib/db";
 import { getSiteUrl } from "@/lib/config";
-import { breadcrumbJsonLd, jsonLdScript, pageJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, jsonLdItems, pageJsonLd } from "@/lib/seo";
 import { PageHero } from "@/components/site/page-hero";
 import { ShopProducts } from "@/components/site/shop-products";
 
@@ -44,21 +44,23 @@ export default async function ShopPage() {
         />
         <ShopProducts products={products} />
       </div>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: jsonLdScript([
-            pageJsonLd(
-              shop?.title ?? "Shop",
-              shop?.description ?? site?.description ?? "",
-              "/shop"
-            ),
-            breadcrumbJsonLd([
-              { name: "Beranda", path: "/" },
-              { name: "Shop", path: "/shop" },
-            ]),
-          ]),
-        }}
-      />
+      {jsonLdItems([
+        pageJsonLd(
+          shop?.title ?? "Shop",
+          shop?.description ?? site?.description ?? "",
+          "/shop"
+        ),
+        breadcrumbJsonLd([
+          { name: "Beranda", path: "/" },
+          { name: "Shop", path: "/shop" },
+        ]),
+      ]).map((ld) => (
+        <script
+          key={ld.key}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ld.html }}
+        />
+      ))}
     </>
   );
 }

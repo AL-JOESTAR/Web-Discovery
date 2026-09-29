@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPageBySlug } from "@/lib/db";
-import { breadcrumbJsonLd, jsonLdScript, pageJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, jsonLdItems, pageJsonLd } from "@/lib/seo";
 import { getSiteUrl } from "@/lib/config";
 
 export async function generateStaticParams() {
@@ -65,17 +65,19 @@ export default async function CustomPage({
         dangerouslySetInnerHTML={{ __html: page.content_html || "" }}
       />
 
-      <script
-        dangerouslySetInnerHTML={{
-          __html: jsonLdScript([
-            pageJsonLd(page.title, page.seo_description || "", `/${page.slug}`),
-            breadcrumbJsonLd([
-              { name: "Beranda", path: "/" },
-              { name: page.title, path: `/${page.slug}` },
-            ]),
-          ]),
-        }}
-      />
+      {jsonLdItems([
+        pageJsonLd(page.title, page.seo_description || "", `/${page.slug}`),
+        breadcrumbJsonLd([
+          { name: "Beranda", path: "/" },
+          { name: page.title, path: `/${page.slug}` },
+        ]),
+      ]).map((ld) => (
+        <script
+          key={ld.key}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ld.html }}
+        />
+      ))}
     </div>
   );
 }

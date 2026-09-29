@@ -9,7 +9,7 @@ import {
 import { getSiteUrl } from "@/lib/config";
 import { ArticleCard } from "@/components/site/article-card";
 import { PageHero } from "@/components/site/page-hero";
-import { categoryJsonLd, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
+import { categoryJsonLd, breadcrumbJsonLd, jsonLdItems } from "@/lib/seo";
 
 export async function generateStaticParams() {
   const hasEnv =
@@ -94,18 +94,20 @@ export default async function KategoriDetailPage({
         </div>
       )}
 
-      <script
-        dangerouslySetInnerHTML={{
-          __html: jsonLdScript([
-            categoryJsonLd(category, siteName),
-            breadcrumbJsonLd([
-              { name: "Beranda", path: "/" },
-              { name: "Kategori", path: "/kategori" },
-              { name: category.name, path: `/kategori/${category.slug}` },
-            ]),
-          ]),
-        }}
-      />
+      {jsonLdItems([
+        categoryJsonLd(category, siteName),
+        breadcrumbJsonLd([
+          { name: "Beranda", path: "/" },
+          { name: "Kategori", path: "/kategori" },
+          { name: category.name, path: `/kategori/${category.slug}` },
+        ]),
+      ]).map((ld) => (
+        <script
+          key={ld.key}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ld.html }}
+        />
+      ))}
     </div>
   );
 }

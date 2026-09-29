@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getSiteSettings } from "@/lib/db";
 import { getSiteUrl } from "@/lib/config";
-import { jsonLdScript, websiteJsonLd } from "@/lib/seo";
+import { jsonLdItems, websiteJsonLd } from "@/lib/seo";
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
 
@@ -51,16 +51,18 @@ export default function SiteLayout({
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
-      <script
-        dangerouslySetInnerHTML={{
-          __html: jsonLdScript(
-            websiteJsonLd(
-              "Fashion Blog",
-              "Inspirasi dan panduan fashion terbaru untuk gaya hidup harianmu."
-            )
-          ),
-        }}
-      />
+      {jsonLdItems(
+        websiteJsonLd(
+          "Fashion Blog",
+          "Inspirasi dan panduan fashion terbaru untuk gaya hidup harianmu."
+        )
+      ).map((ld) => (
+        <script
+          key={ld.key}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ld.html }}
+        />
+      ))}
     </div>
   );
 }

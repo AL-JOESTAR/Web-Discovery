@@ -1,6 +1,7 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { publicClient } from "@/lib/supabase/public";
 import { DEFAULT_THEME, TAGS, hasPublicEnv } from "@/lib/config";
+import { pickRelated } from "@/lib/related";
 import type {
   AffiliateLink,
   Article,
@@ -168,6 +169,36 @@ export async function getArticlesByCategorySlug(slug: string): Promise<Article[]
     .eq("category_id", category.id)
     .order("published_at", { ascending: false });
   return (data as Article[] | null) ?? [];
+}
+
+export async function getRelatedArticles({
+  slug,
+  categoryId,
+  keywords,
+  limit = 3,
+}: {
+  slug: string;
+  categoryId: string | null;
+  keywords?: string | null;
+  limit?: number;
+}): Promise<Article[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(TAGS.articles);
+  cacheTag(TAGS.categories);
+  if (!hasPublicEnv) return [];
+  const { data } = await publicClient()
+    .from("articles")
+    .select("*, category:categories(*)")
+    .eq("status", "published")
+    .order("published_at", { ascending: false })
+    .limit(30);
+  const pool = (data as Article[] | null) ?? [];
+  return pickRelated(
+    { slug, category_id: categoryId, seo_keywords: keywords },
+    pool,
+    limit
+  );
 }
 
 export async function getPublishedPages(): Promise<Page[]> {

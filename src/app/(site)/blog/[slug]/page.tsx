@@ -3,12 +3,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   getArticleBySlug,
+  getRelatedArticles,
   getSiteSettings,
 } from "@/lib/db";
 import { getSiteUrl } from "@/lib/config";
 import { formatDate } from "@/lib/utils";
-import { articleJsonLd, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
+import { articleJsonLd, breadcrumbJsonLd, jsonLdItems } from "@/lib/seo";
 import { ArticleLayout } from "@/components/site/article-layouts";
+import { ArticleCard } from "@/components/site/article-card";
+import { SectionHeading } from "@/components/site/section-heading";
 
 export async function generateStaticParams() {
   const hasEnv =
@@ -77,7 +80,14 @@ export default async function ArticlePage({
   const article = await getArticleBySlug(slug);
   if (!article) notFound();
 
-  const settings = await getSiteSettings();
+  const [settings, related] = await Promise.all([
+    getSiteSettings(),
+    getRelatedArticles({
+      slug: article.slug,
+      categoryId: article.category_id,
+      keywords: article.seo_keywords,
+    }),
+  ]);
   const siteName = settings?.site?.name ?? "Fashion";
 
   const template = article.template || "classic";
@@ -119,19 +129,36 @@ export default async function ArticlePage({
         </p>
       </div>
 
+      {related.length > 0 && (
+        <section className="container-wide mx-auto mt-16 sm:mt-20">
+          <SectionHeading
+            eyebrow="Lanjut Membaca"
+            title="Artikel Terkait"
+            description="Baca juga artikel lain yang sejalan dengan topik ini."
+          />
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {related.map((item) => (
+              <ArticleCard key={item.id} article={item} />
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* JSON-LD */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: jsonLdScript([
-            articleJsonLd(article, siteName),
-            breadcrumbJsonLd([
-              { name: "Beranda", path: "/" },
-              { name: "Blog", path: "/blog" },
-              { name: article.title, path: `/blog/${article.slug}` },
-            ]),
-          ]),
-        }}
-      />
+      {jsonLdItems([
+        articleJsonLd(article, siteName),
+        breadcrumbJsonLd([
+          { name: "Beranda", path: "/" },
+          { name: "Blog", path: "/blog" },
+          { name: article.title, path: `/blog/${article.slug}` },
+        ]),
+      ]).map((ld) => (
+        <script
+          key={ld.key}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ld.html }}
+        />
+      ))}
     </article>
   );
 }

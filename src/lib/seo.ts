@@ -110,19 +110,19 @@ export function pageJsonLd(
   };
 }
 
-export function jsonLdScript(ld: JsonLd | JsonLd[]) {
+export type JsonLdItem = { key: string; html: string };
+
+export function jsonLdItems(ld: JsonLd | JsonLd[]): JsonLdItem[] {
   const items = Array.isArray(ld) ? ld : [ld];
   return items
     .filter(
       (item) =>
         !articleJsonLdHasUndefinedValue(item) && item && Object.keys(item).length
     )
-    .map((item) => JSON.stringify(item))
-    .map(
-      (json) =>
-        `<script type="application/ld+json">${json.replace(/</g, "\\u003c")}</script>`
-    )
-    .join("\n");
+    .map((item) => ({
+      key: String((item["@type"] as string) || "ld"),
+      html: JSON.stringify(item).replace(/</g, "\\u003c"),
+    }));
 }
 
 function articleJsonLdHasUndefinedValue(item: Record<string, unknown>): boolean {
