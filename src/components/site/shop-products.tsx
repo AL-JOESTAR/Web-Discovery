@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ProductCard } from "@/components/site/product-card";
 import {
   BUDGET_OPTIONS,
@@ -41,8 +41,22 @@ export function ShopProducts({ products }: { products: AffiliateLink[] }) {
     safePage * PAGE_SIZE
   );
 
+  const topRef = useRef<HTMLDivElement>(null);
+  const prevPage = useRef(safePage);
+
+  useEffect(() => {
+    if (prevPage.current === safePage) return;
+    prevPage.current = safePage;
+    topRef.current?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+      block: "start",
+    });
+  }, [safePage]);
+
   return (
-    <div className="mt-10">
+    <div className="mt-10 scroll-mt-20" ref={topRef}>
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
         <div className="relative min-w-0 flex-1">
           <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-stone-400">
@@ -73,7 +87,7 @@ export function ShopProducts({ products }: { products: AffiliateLink[] }) {
             className="input w-full pl-11"
           />
         </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:flex lg:flex-none">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3 lg:flex lg:flex-none">
           <select
             className="select"
             value={kategori}
@@ -150,10 +164,10 @@ export function ShopProducts({ products }: { products: AffiliateLink[] }) {
         </div>
       ) : (
         <>
-          <p className="mt-8 text-sm text-stone-400">
+          <p className="mt-8 text-sm text-stone-400" aria-live="polite">
             {filtered.length} produk ditemukan
           </p>
-          <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
             {visible.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

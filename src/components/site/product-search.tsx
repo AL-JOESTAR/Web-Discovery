@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ProductCard } from "@/components/site/product-card";
 import {
   BUDGET_OPTIONS,
@@ -46,6 +46,20 @@ export function ProductSearch({
     safePage * PAGE_SIZE
   );
 
+  const topRef = useRef<HTMLDivElement>(null);
+  const prevPage = useRef(safePage);
+
+  useEffect(() => {
+    if (prevPage.current === safePage) return;
+    prevPage.current = safePage;
+    topRef.current?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+      block: "start",
+    });
+  }, [safePage]);
+
   return (
     <section className="border-b border-line bg-surface">
       <div className="container-wide py-16 sm:py-20">
@@ -61,7 +75,10 @@ export function ProductSearch({
           </p>
         </div>
 
-        <div className="mx-auto mt-8 flex max-w-5xl flex-col gap-3 lg:flex-row lg:items-center">
+        <div
+          className="mx-auto mt-8 flex max-w-5xl scroll-mt-20 flex-col gap-3 lg:flex-row lg:items-center"
+          ref={topRef}
+        >
           <div className="relative min-w-0 flex-1">
             <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-stone-400">
               <svg
@@ -91,7 +108,7 @@ export function ProductSearch({
               className="input w-full pl-11"
             />
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:flex lg:flex-none">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3 lg:flex lg:flex-none">
             <select
               className="select"
               value={kategori}
@@ -168,10 +185,10 @@ export function ProductSearch({
           </div>
         ) : (
           <>
-            <p className="mt-8 text-sm text-stone-400">
+            <p className="mt-8 text-sm text-stone-400" aria-live="polite">
               Menampilkan {visible.length} dari {filtered.length} produk
             </p>
-            <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
               {visible.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
