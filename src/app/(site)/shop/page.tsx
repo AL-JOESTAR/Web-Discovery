@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getAffiliateProducts, getLandingContent, getSiteSettings } from "@/lib/db";
 import { getSiteUrl } from "@/lib/config";
 import { breadcrumbJsonLd, jsonLdItems, pageJsonLd } from "@/lib/seo";
-import { PageHero } from "@/components/site/page-hero";
 import { ShopProducts } from "@/components/site/shop-products";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -33,15 +32,10 @@ export default async function ShopPage() {
 
   return (
     <>
-      <div className="container-wide py-14 sm:py-20">
-        <PageHero
-          eyebrow="Shop"
-          title={shop?.title ?? "Semua Produk"}
-          description={
-            shop?.description ??
-            "Temukan semua produk fashion pilihan kami dalam satu tempat."
-          }
-        />
+      <div className="container-wide py-8 sm:py-12">
+        <h1 className="font-serif text-2xl font-bold tracking-tight sm:text-3xl">
+          {shop?.title ?? "Semua Produk"}
+        </h1>
         <ShopProducts products={products} />
       </div>
       {jsonLdItems([

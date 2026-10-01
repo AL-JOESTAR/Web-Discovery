@@ -56,7 +56,7 @@ export function ShopProducts({ products }: { products: AffiliateLink[] }) {
   }, [safePage]);
 
   return (
-    <div className="mt-10 scroll-mt-20" ref={topRef}>
+    <div className="mt-6 scroll-mt-20 sm:mt-8" ref={topRef}>
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
         <div className="relative min-w-0 flex-1">
           <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-stone-400">

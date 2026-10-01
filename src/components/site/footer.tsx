@@ -22,22 +22,24 @@ export async function Footer() {
 
   return (
     <footer className="border-t border-line bg-surface">
-      <div className="container-wide grid gap-10 py-14 md:grid-cols-4 md:gap-12">
+      <div className="container-wide grid gap-8 py-8 sm:gap-10 sm:py-14 md:grid-cols-4 md:gap-12">
         <div className="md:col-span-2">
-          <p className="font-serif text-2xl font-bold text-foreground">{name}</p>
-          <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
+          <p className="font-serif text-xl font-bold text-foreground sm:text-2xl">
+            {name}
+          </p>
+          <p className="mt-2 max-w-sm text-xs leading-relaxed text-muted line-clamp-3 sm:mt-3 sm:text-sm sm:line-clamp-none">
             {site?.description ??
               "Inspirasi dan panduan fashion terbaru untuk gaya hidup harianmu."}
           </p>
           {socialEntries.length > 0 && (
-            <div className="mt-6 flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap gap-2 sm:mt-6">
               {socialEntries.map(([key, url]) => (
                 <a
                   key={key}
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full border border-line px-3.5 py-1.5 text-xs font-medium capitalize text-muted transition-colors hover:border-accent hover:text-accent"
+                  className="rounded-full border border-line px-3 py-1 text-[11px] font-medium capitalize text-muted transition-colors hover:border-accent hover:text-accent sm:px-3.5 sm:py-1.5 sm:text-xs"
                 >
                   {key}
                 </a>
@@ -46,60 +48,62 @@ export async function Footer() {
           )}
         </div>
 
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
-            Kategori
-          </p>
-          <ul className="mt-4 space-y-2.5">
-            {categories.slice(0, 6).map((category) => (
-              <li key={category.id}>
-                <Link
-                  href={`/kategori/${category.slug}`}
-                  className="text-sm text-muted transition-colors hover:text-accent"
-                >
-                  {category.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <div className="grid grid-cols-2 gap-6 md:contents">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
+              Kategori
+            </p>
+            <ul className="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
+              {categories.slice(0, 6).map((category) => (
+                <li key={category.id}>
+                  <Link
+                    href={`/kategori/${category.slug}`}
+                    className="text-sm text-muted transition-colors hover:text-accent"
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
-            Halaman
-          </p>
-          <ul className="mt-4 space-y-2.5">
-            <li>
-              <Link
-                href="/blog"
-                className="text-sm text-muted transition-colors hover:text-accent"
-              >
-                Semua Artikel
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/shop"
-                className="text-sm text-muted transition-colors hover:text-accent"
-              >
-                Shop
-              </Link>
-            </li>
-            {pages.map((page) => (
-              <li key={page.id}>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
+              Halaman
+            </p>
+            <ul className="mt-3 space-y-2 sm:mt-4 sm:space-y-2.5">
+              <li>
                 <Link
-                  href={`/${page.slug}`}
+                  href="/blog"
                   className="text-sm text-muted transition-colors hover:text-accent"
                 >
-                  {page.title}
+                  Semua Artikel
                 </Link>
               </li>
-            ))}
-          </ul>
+              <li>
+                <Link
+                  href="/shop"
+                  className="text-sm text-muted transition-colors hover:text-accent"
+                >
+                  Shop
+                </Link>
+              </li>
+              {pages.map((page) => (
+                <li key={page.id}>
+                  <Link
+                    href={`/${page.slug}`}
+                    className="text-sm text-muted transition-colors hover:text-accent"
+                  >
+                    {page.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
       <div className="border-t border-line">
-        <div className="container-wide flex justify-center py-5 text-xs text-stone-400">
+        <div className="container-wide flex justify-center py-4 text-xs text-stone-400 sm:py-5">
           <p>© 2026 {name}. Semua hak dilindungi.</p>
         </div>
       </div>
