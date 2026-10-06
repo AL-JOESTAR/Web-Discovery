@@ -6,15 +6,13 @@ import {
   getCategoryBySlug,
   getSiteSettings,
 } from "@/lib/db";
-import { getSiteUrl } from "@/lib/config";
+import { getSiteUrl, hasPublicEnv } from "@/lib/config";
 import { ArticleCard } from "@/components/site/article-card";
 import { PageHero } from "@/components/site/page-hero";
 import { categoryJsonLd, breadcrumbJsonLd, jsonLdItems } from "@/lib/seo";
 
 export async function generateStaticParams() {
-  const hasEnv =
-    !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!hasEnv) return [{ slug: "__placeholder__" }];
+  if (!hasPublicEnv) return [{ slug: "__placeholder__" }];
   const { publicClient } = await import("@/lib/supabase/public");
   const { data } = await publicClient().from("categories").select("slug");
   if (!data?.length) return [{ slug: "__placeholder__" }];

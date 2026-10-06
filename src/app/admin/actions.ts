@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { adminClient } from "@/lib/supabase/admin";
-import { TAGS } from "@/lib/config";
+import { TAGS, hasPexelsEnv } from "@/lib/config";
 import { slugify } from "@/lib/utils";
 import { detectMarketplace, isMarketplace } from "@/lib/marketplace";
 
@@ -17,7 +17,7 @@ async function requireAdmin() {
   const { data: admin } = await supabase
     .from("admins")
     .select("email")
-    .eq("email", user.email)
+    .ilike("email", user.email ?? "")
     .single();
   if (!admin) throw new Error("Unauthorized");
   return admin;
@@ -47,7 +47,7 @@ export async function createArticle(
   const customSlug = String(formData.get("slug") || "").trim();
   const category_id = String(formData.get("category_id") || "") || null;
   const excerpt = String(formData.get("excerpt") || "").trim() || null;
-  const content_html = String(formData.get("content_html") || "").trim();
+  const content_html = sanitizeHtml(String(formData.get("content_html") || "")).trim();
   const content_json = String(formData.get("content_json") || "").trim();
   const cover_image = String(formData.get("cover_image") || "").trim() || null;
   const status = String(formData.get("status") || "draft");
@@ -68,7 +68,8 @@ export async function createArticle(
 
   if (!title) return { ok: false, error: "Judul harus diisi." };
 
-  const slug = customSlug || slugify(title);
+  let slug = customSlug ? slugify(customSlug) : slugify(title);
+  if (!slug || !SLUG_RE.test(slug)) slug = slugify(title);
   if (!slug) return { ok: false, error: "Slug tidak valid." };
 
   const published_at =
@@ -82,7 +83,13 @@ export async function createArticle(
       category_id,
       excerpt,
       content_html,
-      content_json: content_json ? JSON.parse(content_json) : null,
+      content_json: (() => {
+        try {
+          return content_json ? JSON.parse(content_json) : null;
+        } catch {
+          return null;
+        }
+      })(),
       cover_image,
       status,
       seo_title,
@@ -123,7 +130,7 @@ export async function updateArticle(
   const customSlug = String(formData.get("slug") || "").trim();
   const category_id = String(formData.get("category_id") || "") || null;
   const excerpt = String(formData.get("excerpt") || "").trim() || null;
-  const content_html = String(formData.get("content_html") || "").trim();
+  const content_html = sanitizeHtml(String(formData.get("content_html") || "")).trim();
   const content_json = String(formData.get("content_json") || "").trim();
   const cover_image = String(formData.get("cover_image") || "").trim() || null;
   const status = String(formData.get("status") || "draft");
@@ -144,7 +151,8 @@ export async function updateArticle(
 
   if (!id || !title) return { ok: false, error: "Data tidak lengkap." };
 
-  const slug = customSlug || slugify(title);
+  let slug = customSlug ? slugify(customSlug) : slugify(title);
+  if (!slug || !SLUG_RE.test(slug)) slug = slugify(title);
 
   const { data: oldArticle } = await adminClient()
     .from("articles")
@@ -165,7 +173,13 @@ export async function updateArticle(
     category_id,
     excerpt,
     content_html,
-    content_json: content_json ? JSON.parse(content_json) : null,
+    content_json: (() => {
+        try {
+          return content_json ? JSON.parse(content_json) : null;
+        } catch {
+          return null;
+        }
+      })(),
     cover_image,
     status,
     seo_title,
@@ -193,6 +207,7 @@ export async function updateArticle(
   revalidateTag(TAGS.articles, "hours");
   revalidateTag(TAGS.settings, "hours");
   revalidatePath("/blog");
+  revalidatePath("/");
   revalidatePath(`/blog/${oldSlug}`);
   if (oldSlug !== slug) revalidatePath(`/blog/${slug}`);
 
@@ -217,6 +232,7 @@ export async function deleteArticle(id: string): Promise<ActionState> {
   revalidateTag(TAGS.articles, "hours");
   revalidateTag(TAGS.settings, "hours");
   revalidatePath("/blog");
+  revalidatePath("/");
   if (slug) revalidatePath(`/blog/${slug}`);
   return { ok: true };
 }
@@ -236,7 +252,8 @@ export async function createCategory(
     String(formData.get("seo_description") || "").trim() || null;
 
   if (!name) return { ok: false, error: "Nama kategori harus diisi." };
-  const slug = customSlug || slugify(name);
+  let slug = customSlug ? slugify(customSlug) : slugify(name);
+  if (!slug || !SLUG_RE.test(slug)) slug = slugify(name);
 
   const { data, error } = await adminClient()
     .from("categories")
@@ -270,7 +287,8 @@ export async function updateCategory(
     String(formData.get("seo_description") || "").trim() || null;
 
   if (!id || !name) return { ok: false, error: "Data tidak lengkap." };
-  const slug = customSlug || slugify(name);
+  let slug = customSlug ? slugify(customSlug) : slugify(name);
+  if (!slug || !SLUG_RE.test(slug)) slug = slugify(name);
 
   const { data: old } = await adminClient()
     .from("categories")
@@ -337,7 +355,7 @@ export async function createPage(
   await requireAdmin();
   const title = String(formData.get("title") || "").trim();
   const customSlug = String(formData.get("slug") || "").trim();
-  const content_html = String(formData.get("content_html") || "").trim();
+  const content_html = sanitizeHtml(String(formData.get("content_html") || "")).trim();
   const content_json = String(formData.get("content_json") || "").trim();
   const published = String(formData.get("published") || "true") === "true";
   const seo_title = String(formData.get("seo_title") || "").trim() || null;
@@ -345,7 +363,8 @@ export async function createPage(
     String(formData.get("seo_description") || "").trim() || null;
 
   if (!title) return { ok: false, error: "Judul harus diisi." };
-  const slug = customSlug || slugify(title);
+  let slug = customSlug ? slugify(customSlug) : slugify(title);
+  if (!slug || !SLUG_RE.test(slug)) slug = slugify(title);
 
   const { data, error } = await adminClient()
     .from("pages")
@@ -353,7 +372,13 @@ export async function createPage(
       title,
       slug,
       content_html,
-      content_json: content_json ? JSON.parse(content_json) : null,
+      content_json: (() => {
+        try {
+          return content_json ? JSON.parse(content_json) : null;
+        } catch {
+          return null;
+        }
+      })(),
       published,
       seo_title,
       seo_description,
@@ -380,7 +405,7 @@ export async function updatePage(
   const id = String(formData.get("id") || "").trim();
   const title = String(formData.get("title") || "").trim();
   const customSlug = String(formData.get("slug") || "").trim();
-  const content_html = String(formData.get("content_html") || "").trim();
+  const content_html = sanitizeHtml(String(formData.get("content_html") || "")).trim();
   const content_json = String(formData.get("content_json") || "").trim();
   const published = String(formData.get("published") || "true") === "true";
   const seo_title = String(formData.get("seo_title") || "").trim() || null;
@@ -388,7 +413,8 @@ export async function updatePage(
     String(formData.get("seo_description") || "").trim() || null;
 
   if (!id || !title) return { ok: false, error: "Data tidak lengkap." };
-  const slug = customSlug || slugify(title);
+  let slug = customSlug ? slugify(customSlug) : slugify(title);
+  if (!slug || !SLUG_RE.test(slug)) slug = slugify(title);
 
   const { data: old } = await adminClient()
     .from("pages")
@@ -403,7 +429,13 @@ export async function updatePage(
       title,
       slug,
       content_html,
-      content_json: content_json ? JSON.parse(content_json) : null,
+      content_json: (() => {
+        try {
+          return content_json ? JSON.parse(content_json) : null;
+        } catch {
+          return null;
+        }
+      })(),
       published,
       seo_title,
       seo_description,
@@ -472,7 +504,27 @@ export async function updateSiteSettings(
 
 // ─── Affiliate Links ────────────────────────────────────────────────────────
 
-const URL_RE = /^https?:\/\/.+/i;
+const URL_RE = /^https?:\/\/[^\s]+/i;
+
+function sanitizeHtml(html: string): string {
+  let out = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+  out = out.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "");
+  out = out.replace(/<iframe\b[^>]*>.*?<\/iframe>/gi, "");
+  out = out.replace(/<object\b[^>]*>.*?<\/object>/gi, "");
+  out = out.replace(/<embed\b[^>]*>/gi, "");
+  out = out.replace(/<base\b[^>]*>/gi, "");
+  out = out.replace(/<meta\b[^>]*>/gi, "");
+  out = out.replace(/<link\b[^>]*>/gi, "");
+  out = out.replace(/\son[a-z]+\s*=\s*"[^"]*"/gi, "");
+  out = out.replace(/\son[a-z]+\s*=\s*'[^']*'/gi, "");
+  out = out.replace(/\son[a-z]+\s*=\s*[^\s>]+/gi, "");
+  out = out.replace(/javascript\s*:/gi, "");
+  out = out.replace(/vbscript\s*:/gi, "");
+  out = out.replace(/data\s*:/gi, "data-blocked:");
+  return out;
+}
+
+const SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 function parseHarga(raw: FormDataEntryValue | null): number | null | -1 {
   const value = String(raw ?? "").trim();
@@ -704,14 +756,24 @@ export async function uploadImage(formData: FormData): Promise<
   await requireAdmin();
   const file = formData.get("file") as File | null;
   if (!file) return { ok: false, error: "File tidak ada." };
-
-  const ext = file.name.split(".").pop() || "jpg";
+  if (file.size > 8 * 1024 * 1024) return { ok: false, error: "File terlalu besar (maks 8MB)." };
+  const mime = file.type || "";
+  const allowed = ["image/png", "image/jpeg", "image/webp", "image/avif", "image/gif"];
+  if (!allowed.includes(mime)) return { ok: false, error: "Tipe file tidak diperbolehkan." };
+  const extMap: Record<string, string> = {
+    "image/png": "png",
+    "image/jpeg": "jpg",
+    "image/webp": "webp",
+    "image/avif": "avif",
+    "image/gif": "gif",
+  };
+  const ext = extMap[mime] || "jpg";
   const path = `uploads/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
   const { error } = await adminClient().storage
     .from("images")
     .upload(path, file, {
-      contentType: file.type,
+      contentType: mime,
       upsert: false,
     });
   if (error) return { ok: false, error: `Gagal upload: ${error.message}` };
@@ -741,7 +803,7 @@ export async function searchPexels(
   query: string
 ): Promise<PexelsSearchResponse> {
   await requireAdmin();
-  const apiKey = process.env.PEXELS_API_KEY;
+  const apiKey = hasPexelsEnv ? process.env.PEXELS_API_KEY : undefined;
   if (!apiKey) {
     return { ok: false, error: "PEXELS_API_KEY belum dikonfigurasi." };
   }
@@ -805,17 +867,41 @@ export async function downloadPexelsImage(
   }
 
   try {
-    const res = await fetch(imageUrl, { cache: "no-store" });
+    let parsed: URL;
+    try {
+      parsed = new URL(imageUrl);
+    } catch {
+      return { ok: false, error: "URL gambar tidak valid." };
+    }
+    if (parsed.protocol !== "https:") {
+      return { ok: false, error: "URL gambar tidak valid." };
+    }
+    const hostname = parsed.hostname.toLowerCase();
+    const allowedHostnames = ["images.pexels.com"];
+    const isAllowed =
+      allowedHostnames.includes(hostname) ||
+      (hostname.endsWith(".pexels.com") && hostname !== "pexels.com");
+    if (!isAllowed) {
+      return { ok: false, error: "URL gambar tidak diperbolehkan." };
+    }
+    const res = await fetch(parsed.toString(), { cache: "no-store" });
     if (!res.ok) {
       return { ok: false, error: "Gagal mengunduh gambar dari Pexels." };
     }
     const blob = await res.blob();
-    const ext =
-      blob.type === "image/png"
-        ? "png"
-        : blob.type === "image/webp"
-          ? "webp"
-          : "jpg";
+    const mime = blob.type || "";
+    const allowed = ["image/png", "image/jpeg", "image/webp", "image/avif", "image/gif"];
+    if (!allowed.includes(mime)) {
+      return { ok: false, error: "Tipe file tidak diperbolehkan." };
+    }
+    const extMap: Record<string, string> = {
+      "image/png": "png",
+      "image/jpeg": "jpg",
+      "image/webp": "webp",
+      "image/avif": "avif",
+      "image/gif": "gif",
+    };
+    const ext = extMap[mime] || "jpg";
     const path = `pexels/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
     const { error } = await adminClient().storage

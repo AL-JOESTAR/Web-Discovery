@@ -3,12 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPageBySlug } from "@/lib/db";
 import { breadcrumbJsonLd, jsonLdItems, pageJsonLd } from "@/lib/seo";
-import { getSiteUrl } from "@/lib/config";
+import { getSiteUrl, hasPublicEnv } from "@/lib/config";
 
 export async function generateStaticParams() {
-  const hasEnv =
-    !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!hasEnv) return [{ slug: "__placeholder__" }];
+  if (!hasPublicEnv) return [{ slug: "__placeholder__" }];
   const { publicClient } = await import("@/lib/supabase/public");
   const { data } = await publicClient()
     .from("pages")

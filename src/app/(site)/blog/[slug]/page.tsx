@@ -6,7 +6,7 @@ import {
   getRelatedArticles,
   getSiteSettings,
 } from "@/lib/db";
-import { getSiteUrl } from "@/lib/config";
+import { getSiteUrl, hasPublicEnv } from "@/lib/config";
 import { formatDate } from "@/lib/utils";
 import { articleJsonLd, breadcrumbJsonLd, jsonLdItems } from "@/lib/seo";
 import { ArticleLayout } from "@/components/site/article-layouts";
@@ -14,9 +14,7 @@ import { ArticleCard } from "@/components/site/article-card";
 import { SectionHeading } from "@/components/site/section-heading";
 
 export async function generateStaticParams() {
-  const hasEnv =
-    !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!hasEnv) return [{ slug: "__placeholder__" }];
+  if (!hasPublicEnv) return [{ slug: "__placeholder__" }];
   const { publicClient } = await import("@/lib/supabase/public");
   const { data } = await publicClient()
     .from("articles")

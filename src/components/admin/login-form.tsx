@@ -31,7 +31,11 @@ export function LoginForm({
       setLoading(false);
       return;
     }
-    router.push(redirectTo);
+    let safe = "/admin/dashboard";
+    if (redirectTo.startsWith("/admin/") && !redirectTo.startsWith("//")) {
+      safe = redirectTo;
+    }
+    router.push(safe);
   }
 
   return (

@@ -27,7 +27,7 @@ export function RichTextEditor({
   const editor = useEditor({
     extensions: [
       StarterKit,
-      LinkExt.configure({ openOnClick: false }),
+      LinkExt.configure({ openOnClick: false, protocols: ["http", "https", "mailto"] }),
       Image,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Underline,
@@ -146,12 +146,26 @@ export function RichTextEditor({
             <ToolbarButton
               onClick={() => {
                 const url = window.prompt("URL:");
-                if (url)
+                if (url === null) return;
+                if (url === "") {
+                  editor.chain().focus().unsetLink().run();
+                  return;
+                }
+                try {
+                  const parsed = new URL(url);
+                  if (!["http:", "https:", "mailto:"].includes(parsed.protocol)) {
+                    window.alert("Protocol tidak diperbolehkan. Gunakan http://, https://, atau mailto:");
+                    return;
+                  }
                   editor
                     .chain()
                     .focus()
-                    .setLink({ href: url })
+                    .setLink({ href: parsed.toString() })
                     .run();
+                } catch {
+                  window.alert("URL tidak valid");
+                  return;
+                }
               }}
               active={editor.isActive("link")}
               title="Link"

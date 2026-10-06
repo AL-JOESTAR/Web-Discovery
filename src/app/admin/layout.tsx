@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { AdminNav } from "@/components/admin/admin-nav";
+import { redirect } from "next/navigation";
 
 export const instant = false;
 
@@ -18,6 +19,17 @@ export default async function AdminLayout({
         {children}
       </div>
     );
+  }
+
+  const { data: admin } = await supabase
+    .from("admins")
+    .select("email")
+    .ilike("email", user.email ?? "")
+    .single();
+
+  if (!admin) {
+    await supabase.auth.signOut();
+    redirect("/admin/login?error=unauthorized");
   }
 
   return <AdminNav email={user.email ?? ""}>{children}</AdminNav>;

@@ -10,7 +10,11 @@ export default async function AdminLoginPage({
   searchParams: Promise<{ redirect?: string; error?: string }>;
 }) {
   const params = await searchParams;
-  const redirectTo = params.redirect || "/admin/dashboard";
+  const rawRedirect = params.redirect || "/admin/dashboard";
+  let redirectTo = "/admin/dashboard";
+  if (rawRedirect.startsWith("/admin/") && !rawRedirect.startsWith("//")) {
+    redirectTo = rawRedirect;
+  }
 
   const supabase = await createClient();
   const {
