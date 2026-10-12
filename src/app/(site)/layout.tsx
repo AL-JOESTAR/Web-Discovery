@@ -41,11 +41,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function SiteLayout({
+export default async function SiteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const settings = await getSiteSettings();
+  const site = settings?.site;
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
@@ -53,8 +55,9 @@ export default function SiteLayout({
       <Footer />
       {jsonLdItems(
         websiteJsonLd(
-          "Fashion Blog",
-          "Inspirasi dan panduan fashion terbaru untuk gaya hidup harianmu."
+          site?.name || "Fashion Blog",
+          site?.description ||
+            "Inspirasi dan panduan fashion terbaru untuk gaya hidup harianmu."
         )
       ).map((ld) => (
         <script

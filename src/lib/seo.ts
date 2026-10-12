@@ -1,4 +1,4 @@
-import type { Article, Category } from "@/lib/types";
+import type { Article, Category, AffiliateLink } from "@/lib/types";
 import { getSiteUrl } from "@/lib/config";
 
 type JsonLd = Record<string, unknown>;
@@ -127,4 +127,54 @@ export function jsonLdItems(ld: JsonLd | JsonLd[]): JsonLdItem[] {
 
 function articleJsonLdHasUndefinedValue(item: Record<string, unknown>): boolean {
   return Object.values(item).some((v) => v === undefined);
+}
+
+export function productJsonLd(affiliate: AffiliateLink): JsonLd {
+  const url = getSiteUrl();
+  const offers: JsonLd = {
+    "@type": "Offer",
+    priceCurrency: "IDR",
+    availability: "InStock",
+  };
+  if (affiliate.harga !== null && affiliate.harga !== undefined) {
+    offers.price = affiliate.harga;
+  }
+  const aggregateRating =
+    affiliate.rating !== null && affiliate.rating !== undefined && affiliate.rating_count
+      ? {
+          "@type": "AggregateRating",
+          ratingValue: affiliate.rating,
+          reviewCount: affiliate.rating_count,
+          bestRating: 5,
+          worstRating: 0,
+        }
+      : undefined;
+  const product: JsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: affiliate.nama,
+    url: affiliate.url || `${url}/shop`,
+    offers,
+  };
+  if (affiliate.gambar) {
+    product.image = [affiliate.gambar];
+  }
+  if (aggregateRating) {
+    product.aggregateRating = aggregateRating;
+  }
+  return product;
+}
+
+export function itemListJsonLd(items: JsonLd[], name?: string): JsonLd {
+  const url = getSiteUrl();
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item,
+    })),
+  };
 }

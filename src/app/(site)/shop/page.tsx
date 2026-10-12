@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getAffiliateProducts, getLandingContent, getSiteSettings } from "@/lib/db";
 import { getSiteUrl } from "@/lib/config";
-import { breadcrumbJsonLd, jsonLdItems, pageJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, itemListJsonLd, jsonLdItems, pageJsonLd, productJsonLd } from "@/lib/seo";
 import { ShopProducts } from "@/components/site/shop-products";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -48,6 +48,9 @@ export default async function ShopPage() {
           { name: "Beranda", path: "/" },
           { name: "Shop", path: "/shop" },
         ]),
+        ...(products.length > 0
+          ? [itemListJsonLd(products.slice(0, 20).map(productJsonLd), "Shop")]
+          : []),
       ]).map((ld) => (
         <script
           key={ld.key}
