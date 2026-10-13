@@ -105,12 +105,12 @@ function ClassicLayout({ article }: { article: Article }) {
       </header>
 
       {article.cover_image && (
-        <div className="my-8 overflow-hidden rounded-3xl shadow-lg shadow-stone-900/10">
+        <div className="mx-auto my-8 aspect-square w-full max-w-sm overflow-hidden rounded-3xl shadow-lg shadow-stone-900/10 sm:max-w-md">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={article.cover_image}
             alt={article.title}
-            className="h-auto w-full object-cover"
+            className="h-full w-full object-cover"
           />
         </div>
       )}

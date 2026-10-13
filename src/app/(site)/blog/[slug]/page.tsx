@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
+  getAffiliateProducts,
   getArticleBySlug,
   getRelatedArticles,
   getSiteSettings,
@@ -9,8 +10,10 @@ import {
 import { getSiteUrl, hasPublicEnv } from "@/lib/config";
 import { formatDate } from "@/lib/utils";
 import { articleJsonLd, breadcrumbJsonLd, jsonLdItems } from "@/lib/seo";
+import { pickRelatedProducts } from "@/lib/product-related";
 import { ArticleLayout } from "@/components/site/article-layouts";
 import { ArticleCard } from "@/components/site/article-card";
+import { ArticleProducts } from "@/components/site/article-products";
 import { SectionHeading } from "@/components/site/section-heading";
 
 export async function generateStaticParams() {
@@ -78,25 +81,39 @@ export default async function ArticlePage({
   const article = await getArticleBySlug(slug);
   if (!article) notFound();
 
-  const [settings, related] = await Promise.all([
+  const [settings, related, products] = await Promise.all([
     getSiteSettings(),
     getRelatedArticles({
       slug: article.slug,
       categoryId: article.category_id,
       keywords: article.seo_keywords,
     }),
+    getAffiliateProducts(),
   ]);
   const siteName = settings?.site?.name ?? "Fashion";
+  const relatedProducts = pickRelatedProducts(
+    article.seo_keywords,
+    products,
+    4
+  );
 
   const template = article.template || "classic";
   const wide = template === "hero" || template === "magazine";
+  const contentWidth = wide
+    ? template === "hero"
+      ? "container-wide"
+      : undefined
+    : "container-page max-w-3xl";
+  const bodyWidth = wide ? "container-wide" : "container-page max-w-3xl";
 
   return (
-    <article className={wide ? "pb-16 sm:pb-24" : "container-page max-w-3xl py-14 sm:py-20"}>
+    <article className="pb-16 sm:pb-24">
       {/* Breadcrumb */}
       <nav
         className={`text-sm text-stone-400 ${
-          wide ? "container-wide mb-6 pt-8 sm:mb-8 sm:pt-10" : "mb-8"
+          wide
+            ? "container-wide mb-6 pt-8 sm:mb-8 sm:pt-10"
+            : "container-page max-w-3xl mb-8 pt-14 sm:pt-20"
         }`}
       >
         <Link href="/" className="hover:text-accent">
@@ -110,14 +127,12 @@ export default async function ArticlePage({
         <span className="text-muted">{article.title}</span>
       </nav>
 
-      <div className={template === "hero" ? "container-wide" : undefined}>
+      <div className={contentWidth}>
         <ArticleLayout article={article} />
       </div>
 
       <div
-        className={`mt-12 border-t border-line pt-6 text-sm text-stone-400 ${
-          wide ? "container-wide" : ""
-        }`}
+        className={`mt-12 border-t border-line pt-6 text-sm text-stone-400 ${bodyWidth}`}
       >
         <p>
           Terbit: {formatDate(article.published_at || article.created_at)}
@@ -127,8 +142,10 @@ export default async function ArticlePage({
         </p>
       </div>
 
+      <ArticleProducts products={relatedProducts} />
+
       {related.length > 0 && (
-        <section className="container-wide mx-auto mt-16 sm:mt-20">
+        <section className="container-wide mt-16 border-t border-line pt-12 sm:mt-20">
           <SectionHeading
             eyebrow="Lanjut Membaca"
             title="Artikel Terkait"
