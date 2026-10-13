@@ -1,6 +1,6 @@
 import { adminClient } from "@/lib/supabase/admin";
 import { hasAdminEnv } from "@/lib/config";
-import type { AffiliateLink, Article, Category, Page } from "@/lib/types";
+import type { AdminNote, AffiliateLink, Article, Category, Page } from "@/lib/types";
 
 const db = () => adminClient();
 
@@ -108,4 +108,24 @@ export async function getAffiliateKategoriOptions(): Promise<string[]> {
     .order("name", { ascending: true });
   const categories = (data as { name: string }[] | null) ?? [];
   return [...new Set(categories.map((c) => c.name.trim()).filter(Boolean))];
+}
+
+export async function getAllNotes(): Promise<AdminNote[]> {
+  if (!hasAdminEnv) return [];
+  const { data } = await db()
+    .from("admin_notes")
+    .select("*")
+    .order("pinned", { ascending: false })
+    .order("updated_at", { ascending: false });
+  return (data as AdminNote[] | null) ?? [];
+}
+
+export async function getNoteById(id: string): Promise<AdminNote | null> {
+  if (!hasAdminEnv) return null;
+  const { data } = await db()
+    .from("admin_notes")
+    .select("*")
+    .eq("id", id)
+    .single();
+  return (data as AdminNote | null) ?? null;
 }

@@ -9,6 +9,7 @@ const PROTECTED = [
   "/admin/settings",
   "/admin/affiliate",
   "/admin/prompt",
+  "/admin/catatan",
 ];
 
 export function proxy(request: NextRequest) {
@@ -75,5 +76,6 @@ export const config = {
     "/admin/settings/:path*",
     "/admin/affiliate/:path*",
     "/admin/prompt/:path*",
+    "/admin/catatan/:path*",
   ],
 };

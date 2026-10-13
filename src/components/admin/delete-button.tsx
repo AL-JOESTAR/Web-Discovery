@@ -1,9 +1,9 @@
 "use client";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { deleteArticle, deleteAffiliateLink, deleteCategory, deletePage } from "@/app/admin/actions";
+import { deleteArticle, deleteAffiliateLink, deleteCategory, deletePage, deleteNote } from "@/app/admin/actions";
 
-type Kind = "article" | "category" | "page" | "affiliate";
+type Kind = "article" | "category" | "page" | "affiliate" | "note";
 
 export function DeleteButton({
   id,
@@ -32,7 +32,9 @@ export function DeleteButton({
             ? deleteCategory
             : kind === "affiliate"
               ? deleteAffiliateLink
-              : deletePage;
+              : kind === "note"
+                ? deleteNote
+                : deletePage;
       const res = await fn(id);
       if (res.ok) router.refresh();
     });

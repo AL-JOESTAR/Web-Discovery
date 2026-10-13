@@ -74,6 +74,15 @@ export type AffiliateLink = {
   updated_at: string;
 };
 
+export type AdminNote = {
+  id: string;
+  title: string;
+  content: string;
+  pinned: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
 export type ThemeSettings = {
   accent: string;
   background: string;

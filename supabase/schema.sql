@@ -197,3 +197,21 @@ on conflict (id) do nothing;
 
 create policy "public read images" on storage.objects
   for select to anon, authenticated using (bucket_id = 'images');
+
+-- =============================================================
+-- Catatan admin (notepad internal, dibagikan semua admin)
+-- =============================================================
+create table if not exists public.admin_notes (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  content text not null default '',
+  pinned boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- Tanpa policy: hanya dapat diakses via service role (admin).
+alter table public.admin_notes enable row level security;
+
+create index if not exists admin_notes_pinned_updated_idx
+  on public.admin_notes (pinned desc, updated_at desc);

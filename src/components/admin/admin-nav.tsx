@@ -12,6 +12,7 @@ const NAV = [
   { label: "Link Afiliasi", href: "/admin/affiliate" },
   { label: "Kategori", href: "/admin/kategori" },
   { label: "Halaman", href: "/admin/pages" },
+  { label: "Catatan", href: "/admin/catatan" },
   { label: "Pengaturan", href: "/admin/settings" },
 ];
 

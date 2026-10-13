@@ -748,6 +748,83 @@ export async function deleteAffiliateLink(id: string): Promise<ActionState> {
   return { ok: true };
 }
 
+// ─── Notes ──────────────────────────────────────────────────────────────────
+
+export async function createNote(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  await requireAdmin();
+  const title = String(formData.get("title") || "").trim();
+  const content = String(formData.get("content") || "").trim();
+  const pinned = String(formData.get("pinned") || "false") === "true";
+
+  if (!title) return { ok: false, error: "Judul catatan harus diisi." };
+
+  const { data, error } = await adminClient()
+    .from("admin_notes")
+    .insert({ title, content, pinned })
+    .select("id")
+    .single();
+  if (error) return { ok: false, error: "Gagal menyimpan catatan." };
+
+  revalidatePath("/admin/catatan");
+  return { ok: true, id: data.id };
+}
+
+export async function updateNote(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  await requireAdmin();
+  const id = String(formData.get("id") || "").trim();
+  const title = String(formData.get("title") || "").trim();
+  const content = String(formData.get("content") || "").trim();
+  const pinned = String(formData.get("pinned") || "false") === "true";
+
+  if (!id || !title) return { ok: false, error: "Data tidak lengkap." };
+
+  const { error } = await adminClient()
+    .from("admin_notes")
+    .update({ title, content, pinned, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) return { ok: false, error: "Gagal mengupdate catatan." };
+
+  revalidatePath("/admin/catatan");
+  return { ok: true, id };
+}
+
+export async function deleteNote(id: string): Promise<ActionState> {
+  await requireAdmin();
+  const { error } = await adminClient()
+    .from("admin_notes")
+    .delete()
+    .eq("id", id);
+  if (error) return { ok: false, error: "Gagal menghapus." };
+
+  revalidatePath("/admin/catatan");
+  return { ok: true };
+}
+
+export async function toggleNotePin(id: string): Promise<ActionState> {
+  await requireAdmin();
+  const { data: note } = await adminClient()
+    .from("admin_notes")
+    .select("pinned")
+    .eq("id", id)
+    .single();
+  if (!note) return { ok: false, error: "Catatan tidak ditemukan." };
+
+  const { error } = await adminClient()
+    .from("admin_notes")
+    .update({ pinned: !note.pinned, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) return { ok: false, error: "Gagal menyematkan catatan." };
+
+  revalidatePath("/admin/catatan");
+  return { ok: true, id };
+}
+
 // ─── Upload ──────────────────────────────────────────────────────────────────
 
 export async function uploadImage(formData: FormData): Promise<
