@@ -51,10 +51,30 @@ export function Hero({
             >
               {ctaText || "Jelajahi Artikel"}
             </Link>
-            <Link href="/kategori" className="btn-ghost-dark w-full sm:w-auto">
-              Kategori
-            </Link>
           </div>
+
+          <a
+            href="#artikel-terkini"
+            aria-label="Gulir ke artikel terkini"
+            className="mt-12 inline-flex flex-col items-center gap-2 text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-stone-300 transition-colors hover:text-white sm:mt-16"
+          >
+            Gulir ke bawah
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+              className="motion-safe:animate-bounce"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </a>
         </div>
       </div>
     </section>

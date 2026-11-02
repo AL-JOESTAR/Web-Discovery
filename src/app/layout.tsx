@@ -22,7 +22,7 @@ export default async function RootLayout({
   return (
     <html
       lang="id"
-      className={`${geistSans.variable} ${playfair.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${playfair.variable} h-full antialiased motion-safe:scroll-smooth`}
     >
       <head>
         <style>{`:root{--accent:${theme.accent};--background:${theme.background};--foreground:${theme.foreground};--surface:${theme.surface};--muted:${theme.muted};--line:${theme.line};--section-dark:${theme.sectionDark}}`}</style>

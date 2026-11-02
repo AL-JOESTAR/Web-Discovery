@@ -1,0 +1,307 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link [ref=e5] [cursor=pointer]:
+          - /url: /
+          - img "Fitzura Fashion" [ref=e6]
+        - link "Belanja Sekarang" [ref=e7] [cursor=pointer]:
+          - /url: /shop
+    - main [ref=e10]:
+      - generic [ref=e15]:
+        - paragraph [ref=e16]: Fitzura Fashion
+        - heading "Temukan Gayamu" [level=1] [ref=e17]
+        - paragraph [ref=e18]: Temukan gaya karakter dan caramu berekspresi.
+        - link "Jelajahi Artikel" [ref=e20] [cursor=pointer]:
+          - /url: /blog
+        - link "Gulir ke artikel terkini" [ref=e21] [cursor=pointer]:
+          - /url: "#artikel-terkini"
+          - text: Gulir ke bawah
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - paragraph [ref=e27]: Cari Produk
+          - heading "Rekomendasi Produk" [level=2] [ref=e28]
+          - paragraph [ref=e29]: Temukan produk fashion pilihan dari tautan afiliasi kami.
+        - generic [ref=e30]:
+          - searchbox "Cari produk" [ref=e32]
+          - generic [ref=e33]:
+            - combobox "Filter kategori" [ref=e34]:
+              - option "Semua kategori" [selected]
+              - option "Atasan"
+              - option "Sepatu"
+              - option "Celana"
+            - combobox "Filter marketplace" [ref=e35]:
+              - option "Semua marketplace" [selected]
+              - option "Shopee"
+            - combobox "Filter budget" [ref=e36]:
+              - option "Semua Budget" [selected]
+              - option "< 100 rb"
+              - option "100 – 250 rb"
+              - option "250 – 500 rb"
+              - option "> 500 rb"
+            - combobox "Urutkan" [ref=e37]:
+              - option "Tanpa pengurutan" [selected]
+              - 'option "Harga: Rendah ke Tinggi"'
+              - 'option "Harga: Tinggi ke Rendah"'
+              - option "Nama A–Z"
+        - paragraph [ref=e38]: Menampilkan 8 dari 60 produk
+        - generic [ref=e39]:
+          - link "BELIEVEDIAGEMSAE - Jaket Hanbok Cheongsam Shopee Atasan BELIEVEDIAGEMSAE - Jaket Hanbok Cheongsam Rating 4.9 dari 5, 56 ulasan Rp 273.000 Beli →" [ref=e40] [cursor=pointer]:
+            - /url: https://s.shopee.co.id/7faKAHDs37?share_channel_code=1
+            - generic [ref=e41]:
+              - img "BELIEVEDIAGEMSAE - Jaket Hanbok Cheongsam" [ref=e42]
+              - generic [ref=e43]: Shopee
+            - generic [ref=e44]:
+              - generic [ref=e45]: Atasan
+              - heading "BELIEVEDIAGEMSAE - Jaket Hanbok Cheongsam" [level=3] [ref=e46]
+              - img "Rating 4.9 dari 5, 56 ulasan" [ref=e47]:
+                - generic [aria-hidden] [ref=e50]: "4.9"
+                - generic [aria-hidden] [ref=e51]: · 56 ulasan
+              - generic [ref=e52]:
+                - generic [ref=e53]: Rp 273.000
+                - generic [ref=e54]: Beli →
+          - link "X Urband Absolute Jacket Leather Sintetis Baseball Shopee Atasan X Urband Absolute Jacket Leather Sintetis Baseball Rating 4.9 dari 5, 1,1rb ulasan Rp 220.000 Beli →" [ref=e55] [cursor=pointer]:
+            - /url: https://s.shopee.co.id/8V9R9qnpcf?exp_info=tt_pV35L5W9
+            - generic [ref=e56]:
+              - img "X Urband Absolute Jacket Leather Sintetis Baseball" [ref=e57]
+              - generic [ref=e58]: Shopee
+            - generic [ref=e59]:
+              - generic [ref=e60]: Atasan
+              - heading "X Urband Absolute Jacket Leather Sintetis Baseball" [level=3] [ref=e61]
+              - img "Rating 4.9 dari 5, 1,1rb ulasan" [ref=e62]:
+                - generic [aria-hidden] [ref=e65]: "4.9"
+                - generic [aria-hidden] [ref=e66]: · 1,1rb ulasan
+              - generic [ref=e67]:
+                - generic [ref=e68]: Rp 220.000
+                - generic [ref=e69]: Beli →
+          - link "X Urband Absolute Jaket Varsity Shopee Atasan X Urband Absolute Jaket Varsity Rating 4.9 dari 5, 2,9rb ulasan Rp 149.000 Beli →" [ref=e70] [cursor=pointer]:
+            - /url: https://s.shopee.co.id/5VVpaNlntz?exp_info=tt_pV35L5W9
+            - generic [ref=e71]:
+              - img "X Urband Absolute Jaket Varsity" [ref=e72]
+              - generic [ref=e73]: Shopee
+            - generic [ref=e74]:
+              - generic [ref=e75]: Atasan
+              - heading "X Urband Absolute Jaket Varsity" [level=3] [ref=e76]
+              - img "Rating 4.9 dari 5, 2,9rb ulasan" [ref=e77]:
+                - generic [aria-hidden] [ref=e80]: "4.9"
+                - generic [aria-hidden] [ref=e81]: · 2,9rb ulasan
+              - generic [ref=e82]:
+                - generic [ref=e83]: Rp 149.000
+                - generic [ref=e84]: Beli →
+          - link "EDINAL WORKSHIRT ZIPPER \"SLB\" KEMEJA BOXY PRIA WANITA Shopee Atasan EDINAL WORKSHIRT ZIPPER \"SLB\" KEMEJA BOXY PRIA WANITA Rating 4.7 dari 5, 1,1rb ulasan Rp 94.500 Beli →" [ref=e85] [cursor=pointer]:
+            - /url: https://s.shopee.co.id/7ptkMhG7B2?share_channel_code=1
+            - generic [ref=e86]:
+              - img "EDINAL WORKSHIRT ZIPPER \"SLB\" KEMEJA BOXY PRIA WANITA" [ref=e87]
+              - generic [ref=e88]: Shopee
+            - generic [ref=e89]:
+              - generic [ref=e90]: Atasan
+              - heading "EDINAL WORKSHIRT ZIPPER \"SLB\" KEMEJA BOXY PRIA WANITA" [level=3] [ref=e91]
+              - img "Rating 4.7 dari 5, 1,1rb ulasan" [ref=e92]:
+                - generic [aria-hidden] [ref=e95]: "4.7"
+                - generic [aria-hidden] [ref=e96]: · 1,1rb ulasan
+              - generic [ref=e97]:
+                - generic [ref=e98]: Rp 94.500
+                - generic [ref=e99]: Beli →
+          - link "EDINAL Jaket Work boxy polos depan belakang Shopee Atasan EDINAL Jaket Work boxy polos depan belakang Rating 4.5 dari 5, 2,1rb ulasan Rp 94.500 Beli →" [ref=e100] [cursor=pointer]:
+            - /url: https://s.shopee.co.id/2qV4PcSTK8?share_channel_code=1
+            - generic [ref=e101]:
+              - img "EDINAL Jaket Work boxy polos depan belakang" [ref=e102]
+              - generic [ref=e103]: Shopee
+            - generic [ref=e104]:
+              - generic [ref=e105]: Atasan
+              - heading "EDINAL Jaket Work boxy polos depan belakang" [level=3] [ref=e106]
+              - img "Rating 4.5 dari 5, 2,1rb ulasan" [ref=e107]:
+                - generic [aria-hidden] [ref=e110]: "4.5"
+                - generic [aria-hidden] [ref=e111]: · 2,1rb ulasan
+              - generic [ref=e112]:
+                - generic [ref=e113]: Rp 94.500
+                - generic [ref=e114]: Beli →
+          - link "Kemeja Pendek Boxy | Stripe | White | Timeless Circle. Shopee Atasan Kemeja Pendek Boxy | Stripe | White | Timeless Circle. Rating 4.9 dari 5, 360 ulasan Rp 115.000 Beli →" [ref=e115] [cursor=pointer]:
+            - /url: https://s.shopee.co.id/qk01ymTet?share_channel_code=1
+            - generic [ref=e116]:
+              - img "Kemeja Pendek Boxy | Stripe | White | Timeless Circle." [ref=e117]
+              - generic [ref=e118]: Shopee
+            - generic [ref=e119]:
+              - generic [ref=e120]: Atasan
+              - heading "Kemeja Pendek Boxy | Stripe | White | Timeless Circle." [level=3] [ref=e121]
+              - img "Rating 4.9 dari 5, 360 ulasan" [ref=e122]:
+                - generic [aria-hidden] [ref=e125]: "4.9"
+                - generic [aria-hidden] [ref=e126]: · 360 ulasan
+              - generic [ref=e127]:
+                - generic [ref=e128]: Rp 115.000
+                - generic [ref=e129]: Beli →
+          - link "X Urband Absolute Jaket Kulit Sintetis Shopee Atasan X Urband Absolute Jaket Kulit Sintetis Rating 4.9 dari 5, 1,8rb ulasan Rp 167.000 Beli →" [ref=e130] [cursor=pointer]:
+            - /url: https://s.shopee.co.id/30oUbz3KTS?share_channel_code=1
+            - generic [ref=e131]:
+              - img "X Urband Absolute Jaket Kulit Sintetis" [ref=e132]
+              - generic [ref=e133]: Shopee
+            - generic [ref=e134]:
+              - generic [ref=e135]: Atasan
+              - heading "X Urband Absolute Jaket Kulit Sintetis" [level=3] [ref=e136]
+              - img "Rating 4.9 dari 5, 1,8rb ulasan" [ref=e137]:
+                - generic [aria-hidden] [ref=e140]: "4.9"
+                - generic [aria-hidden] [ref=e141]: · 1,8rb ulasan
+              - generic [ref=e142]:
+                - generic [ref=e143]: Rp 167.000
+                - generic [ref=e144]: Beli →
+          - link "Kemeja Pendek Stripe | Unbrokeen | Boxy | Brainsgland Shopee Atasan Kemeja Pendek Stripe | Unbrokeen | Boxy | Brainsgland Rating 4.8 dari 5, 3,4rb ulasan Rp 109.000 Beli →" [ref=e145] [cursor=pointer]:
+            - /url: https://s.shopee.co.id/6fhmykO1k7?share_channel_code=1
+            - generic [ref=e146]:
+              - img "Kemeja Pendek Stripe | Unbrokeen | Boxy | Brainsgland" [ref=e147]
+              - generic [ref=e148]: Shopee
+            - generic [ref=e149]:
+              - generic [ref=e150]: Atasan
+              - heading "Kemeja Pendek Stripe | Unbrokeen | Boxy | Brainsgland" [level=3] [ref=e151]
+              - img "Rating 4.8 dari 5, 3,4rb ulasan" [ref=e152]:
+                - generic [aria-hidden] [ref=e155]: "4.8"
+                - generic [aria-hidden] [ref=e156]: · 3,4rb ulasan
+              - generic [ref=e157]:
+                - generic [ref=e158]: Rp 109.000
+                - generic [ref=e159]: Beli →
+        - navigation [ref=e160]:
+          - button "← Sebelumnya" [disabled]
+          - generic [ref=e161]: Halaman 1 dari 8
+          - button "Selanjutnya →" [ref=e162]
+        - link "Muat Semua Produk" [ref=e164] [cursor=pointer]:
+          - /url: /shop
+      - generic [ref=e166]:
+        - link "Atasan" [ref=e167] [cursor=pointer]:
+          - /url: /kategori/atasan
+        - link "Celana" [ref=e168] [cursor=pointer]:
+          - /url: /kategori/celana
+        - link "Outfit Pria" [ref=e169] [cursor=pointer]:
+          - /url: /kategori/outfit-pria
+        - link "Sepatu" [ref=e170] [cursor=pointer]:
+          - /url: /kategori/sepatu
+      - generic [ref=e171]:
+        - generic [ref=e172]:
+          - generic [ref=e173]:
+            - paragraph [ref=e174]: Terbaru
+            - heading "Artikel Terkini" [level=2] [ref=e175]
+            - paragraph [ref=e176]: Inspirasi fashion terbaru untuk harimu.
+          - link "Lihat Semua" [ref=e177] [cursor=pointer]:
+            - /url: /blog
+        - generic [ref=e178]:
+          - 'link "C • 1 November 2026 • 12 mnt Celana Mid Waist: Panduan Memilih dan Memadukannya Panduan celana mid waist: pahami bedanya dengan high dan low waist, pilih bahan dan ukuran yang pas, serta tips memadukannya untuk tampilan nyaman." [ref=e179] [cursor=pointer]':
+            - /url: /blog/celana-mid-waist-panduan-memilih-dan-memadukannya
+            - generic [ref=e180]: C
+            - generic [ref=e182]:
+              - generic [ref=e183]:
+                - generic [ref=e184]: •
+                - generic [ref=e185]: 1 November 2026
+                - generic [ref=e186]: •
+                - generic [ref=e187]: 12 mnt
+              - 'heading "Celana Mid Waist: Panduan Memilih dan Memadukannya" [level=3] [ref=e188]'
+              - paragraph [ref=e189]: "Panduan celana mid waist: pahami bedanya dengan high dan low waist, pilih bahan dan ukuran yang pas, serta tips memadukannya untuk tampilan nyaman."
+          - 'link "Baju untuk Orang Kurus: Cara Memilih Potongan dan Bahan Atasan • 31 Oktober 2026 • 10 mnt Baju untuk Orang Kurus: Cara Memilih Potongan dan Bahan Bingung memilih baju untuk orang kurus? Simak cara memilih potongan, bahan, warna, dan layering agar tubuh terlihat proporsional dan tetap nyaman." [ref=e190] [cursor=pointer]':
+            - /url: /blog/baju-untuk-orang-kurus-cara-memilih-potongan-dan-bahan
+            - 'img "Baju untuk Orang Kurus: Cara Memilih Potongan dan Bahan" [ref=e192]'
+            - generic [ref=e193]:
+              - generic [ref=e194]:
+                - generic [ref=e195]: Atasan
+                - generic [ref=e196]: •
+                - generic [ref=e197]: 31 Oktober 2026
+                - generic [ref=e198]: •
+                - generic [ref=e199]: 10 mnt
+              - 'heading "Baju untuk Orang Kurus: Cara Memilih Potongan dan Bahan" [level=3] [ref=e200]'
+              - paragraph [ref=e201]: Bingung memilih baju untuk orang kurus? Simak cara memilih potongan, bahan, warna, dan layering agar tubuh terlihat proporsional dan tetap nyaman.
+          - 'link "Sneakers dan Celana Cargo: Panduan Padu Padan yang Nyaman Outfit Pria • 21 Oktober 2026 • 9 mnt Sneakers dan Celana Cargo: Panduan Padu Padan yang Nyaman Padu padan sneakers dan celana cargo yang nyaman: pilih potongan, warna, dan bahan yang tepat. Simak panduan praktis dan tips merawatnya." [ref=e202] [cursor=pointer]':
+            - /url: /blog/sneakers-dan-celana-cargo-panduan-padu-padan-yang-nyaman
+            - 'img "Sneakers dan Celana Cargo: Panduan Padu Padan yang Nyaman" [ref=e204]'
+            - generic [ref=e205]:
+              - generic [ref=e206]:
+                - generic [ref=e207]: Outfit Pria
+                - generic [ref=e208]: •
+                - generic [ref=e209]: 21 Oktober 2026
+                - generic [ref=e210]: •
+                - generic [ref=e211]: 9 mnt
+              - 'heading "Sneakers dan Celana Cargo: Panduan Padu Padan yang Nyaman" [level=3] [ref=e212]'
+              - paragraph [ref=e213]: "Padu padan sneakers dan celana cargo yang nyaman: pilih potongan, warna, dan bahan yang tepat. Simak panduan praktis dan tips merawatnya."
+          - 'link "Kemeja Tangan Pendek: Cara Memilih Bahan dan Potongan Atasan • 21 Oktober 2026 • 8 mnt Kemeja Tangan Pendek: Cara Memilih Bahan dan Potongan Panduan kemeja tangan pendek untuk cuaca tropis: pilih bahan, potongan, dan warna yang tepat. Temukan tips memadukan dan merawatnya agar awet." [ref=e214] [cursor=pointer]':
+            - /url: /blog/kemeja-tangan-pendek-cara-memilih-bahan-dan-potongan
+            - 'img "Kemeja Tangan Pendek: Cara Memilih Bahan dan Potongan" [ref=e216]'
+            - generic [ref=e217]:
+              - generic [ref=e218]:
+                - generic [ref=e219]: Atasan
+                - generic [ref=e220]: •
+                - generic [ref=e221]: 21 Oktober 2026
+                - generic [ref=e222]: •
+                - generic [ref=e223]: 8 mnt
+              - 'heading "Kemeja Tangan Pendek: Cara Memilih Bahan dan Potongan" [level=3] [ref=e224]'
+              - paragraph [ref=e225]: "Panduan kemeja tangan pendek untuk cuaca tropis: pilih bahan, potongan, dan warna yang tepat. Temukan tips memadukan dan merawatnya agar awet."
+          - 'link "Hoodie Zipper: Cara Memilih Bahan, Ukuran, dan Gaya Atasan • 18 Oktober 2026 • 16 mnt Hoodie Zipper: Cara Memilih Bahan, Ukuran, dan Gaya Hoodie zipper cocok untuk gaya kasual dan berlapis. Pelajari cara memilih bahan, ukuran, dan warna, serta padu padan yang tepat sebelum membeli." [ref=e226] [cursor=pointer]':
+            - /url: /blog/hoodie-zipper-cara-memili-bahan-ukuran-dan-gaya
+            - 'img "Hoodie Zipper: Cara Memilih Bahan, Ukuran, dan Gaya" [ref=e228]'
+            - generic [ref=e229]:
+              - generic [ref=e230]:
+                - generic [ref=e231]: Atasan
+                - generic [ref=e232]: •
+                - generic [ref=e233]: 18 Oktober 2026
+                - generic [ref=e234]: •
+                - generic [ref=e235]: 16 mnt
+              - 'heading "Hoodie Zipper: Cara Memilih Bahan, Ukuran, dan Gaya" [level=3] [ref=e236]'
+              - paragraph [ref=e237]: Hoodie zipper cocok untuk gaya kasual dan berlapis. Pelajari cara memilih bahan, ukuran, dan warna, serta padu padan yang tepat sebelum membeli.
+      - generic [ref=e239]:
+        - generic [ref=e240]:
+          - paragraph [ref=e241]: Tentang
+          - heading "Tentang Kami" [level=2] [ref=e242]
+          - paragraph [ref=e243]: Kami menghadirkan inspirasi seputar fashion, tren, dan gaya hidup modern. Dengan mengutamakan kualitas dan relevansi, kami hadir untuk membantu Anda menemukan gaya yang elegan, autentik, dan penuh karakter.
+        - generic [ref=e244]: Fitzura Fashion
+      - generic [ref=e246]:
+        - generic [ref=e248]:
+          - paragraph [ref=e249]: Keunggulan
+          - heading "Kenapa Memilih Kami" [level=2] [ref=e250]
+          - paragraph [ref=e251]: Konten berkualitas yang menginspirasi gaya hidupmu
+        - generic [ref=e252]:
+          - generic [ref=e253]:
+            - paragraph [ref=e254]: Tren Terbaru
+            - paragraph [ref=e255]: Selalu update dengan tren fashion terbaru setiap musim.
+          - generic [ref=e256]:
+            - paragraph [ref=e257]: Tips Terpercaya
+            - paragraph [ref=e258]: Panduan memilih dan memadukan busana untuk berbagai acara.
+          - generic [ref=e259]:
+            - paragraph [ref=e260]: Konten Berkualitas
+            - paragraph [ref=e261]: Artikel yang ditulis dengan riset mendalam dan mudah dibaca.
+      - generic [ref=e263]:
+        - paragraph [ref=e264]: Newsletter
+        - heading "Berlangganan Newsletter" [level=2] [ref=e265]
+        - paragraph [ref=e266]: Dapatkan tips fashion terbaru langsung di email kamu.
+        - generic [ref=e267]:
+          - textbox "email kamu" [ref=e268]
+          - button "Daftar" [ref=e269]
+    - contentinfo [ref=e270]:
+      - generic [ref=e271]:
+        - generic [ref=e272]:
+          - paragraph [ref=e273]: Fitzura Fashion
+          - paragraph [ref=e274]: Eksplorasi fashion, temukan caramu berekspresi.
+        - generic [ref=e275]:
+          - generic [ref=e276]:
+            - paragraph [ref=e277]: Kategori
+            - list [ref=e278]:
+              - listitem [ref=e279]:
+                - link "Atasan" [ref=e280] [cursor=pointer]:
+                  - /url: /kategori/atasan
+              - listitem [ref=e281]:
+                - link "Celana" [ref=e282] [cursor=pointer]:
+                  - /url: /kategori/celana
+              - listitem [ref=e283]:
+                - link "Outfit Pria" [ref=e284] [cursor=pointer]:
+                  - /url: /kategori/outfit-pria
+              - listitem [ref=e285]:
+                - link "Sepatu" [ref=e286] [cursor=pointer]:
+                  - /url: /kategori/sepatu
+          - generic [ref=e287]:
+            - paragraph [ref=e288]: Halaman
+            - list [ref=e289]:
+              - listitem [ref=e290]:
+                - link "Semua Artikel" [ref=e291] [cursor=pointer]:
+                  - /url: /blog
+              - listitem [ref=e292]:
+                - link "Shop" [ref=e293] [cursor=pointer]:
+                  - /url: /shop
+              - listitem [ref=e294]:
+                - link "Tentang Kami" [ref=e295] [cursor=pointer]:
+                  - /url: /tentang-kami
+      - paragraph [ref=e298]: © 2026 Fitzura Fashion. Semua hak dilindungi.
+  - button "Open Next.js Dev Tools" [ref=e304] [cursor=pointer]
+  - alert [ref=e308]

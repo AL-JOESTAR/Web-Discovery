@@ -51,7 +51,10 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="container-wide py-16 sm:py-24">
+      <section
+        id="artikel-terkini"
+        className="container-wide scroll-mt-24 py-16 sm:py-24"
+      >
         <SectionHeading
           eyebrow="Terbaru"
           title="Artikel Terkini"
